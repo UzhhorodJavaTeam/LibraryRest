@@ -1,10 +1,10 @@
 package com.libraryrest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by superuser on 25.05.15.
@@ -24,15 +24,11 @@ public class Book implements Serializable {
     @Column(name = "description")
     String description;
 
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "book")
+    List<Author> authors = new ArrayList<Author>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "book_author", joinColumns = {
-            @JoinColumn(name = "book_id", nullable = false, updatable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "author_id",
-                    nullable = false, updatable = false) })
-    Set<Author> authors = new HashSet<Author>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "catalog", joinColumns = @JoinColumn(name = "id_book"), inverseJoinColumns = @JoinColumn(name = "id_category"))
     private BookCategory bookCategory;
 
@@ -62,11 +58,11 @@ public class Book implements Serializable {
         this.description = description;
     }
 
-    public Set<Author> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Set<Author> authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
@@ -84,5 +80,9 @@ public class Book implements Serializable {
 
     public void setBookCategory(BookCategory bookCategory) {
         this.bookCategory = bookCategory;
+    }
+
+    public String toString(){
+        return "Name: " + name + " Description: " + description + " Authors: " + authors;
     }
 }

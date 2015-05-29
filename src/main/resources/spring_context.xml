@@ -10,34 +10,38 @@
               http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 
-       <mvc:annotation-driven/>
+    <mvc:annotation-driven/>
 
-       <mvc:resources mapping="/resources/**" location="/resources/"/>
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
 
-       <context:component-scan base-package="com.libraryrest"/>
+    <context:component-scan base-package="com.libraryrest"/>
 
-       <context:property-placeholder location="classpath:database_mysql.properties"/>
+    <context:property-placeholder location="classpath:database_mysql.properties"/>
 
-       <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-              <property name="driverClassName" value="${database.driver}"/>
-              <property name="url" value="${database.url}"/>
-              <property name="username" value="${database.user}"/>
-              <property name="password" value="${database.password}"/>
-       </bean>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${database.driver}"/>
+        <property name="url" value="${database.url}"/>
+        <property name="username" value="${database.user}"/>
+        <property name="password" value="${database.password}"/>
+    </bean>
 
-       <bean id="sessionFactory"
-             class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-              <property name="dataSource" ref="dataSource"/>
-              <property name="packagesToScan" value="com.libraryrest.models" />
-              <property name="hibernateProperties">
-                     <props>
-                            <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-                            <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                            <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-                     </props>
-              </property>
-       </bean>
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="com.libraryrest.models"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+            </props>
+        </property>
+    </bean>
 
-       <tx:annotation-driven/>
+    <tx:annotation-driven/>
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
 
 </beans>

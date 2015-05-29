@@ -1,25 +1,32 @@
 package com.libraryrest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="author")
-public class Author{
+@Table(name = "author")
+public class Author {
 
     @Id
-    @Column(name="author_id")
+    @Column(name = "author_id")
     @GeneratedValue
     private Integer author_id;
 
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String first_name;
 
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String last_name;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "authors")
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "book_author", joinColumns = {
+            @JoinColumn(name = "author_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "book_id",
+                    nullable = false, updatable = false)})
     private List<Book> book = new ArrayList<Book>();
 
     public Author() {
@@ -62,4 +69,9 @@ public class Author{
         this.first_name = first_name;
     }
 
+
+    @Override
+    public String toString(){
+        return "Name: "+ first_name + " " +  last_name;
+    }
 }

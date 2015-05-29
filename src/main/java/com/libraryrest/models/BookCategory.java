@@ -2,6 +2,8 @@ package com.libraryrest.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "category")
@@ -15,7 +17,7 @@ public class BookCategory implements Serializable {
     @Column(name = "category_title")
     private String category_name;
 
-    @OneToMany(mappedBy = "bookCategory", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER)
     private List<Book> book = new ArrayList<Book>();
 
     public BookCategory() {
@@ -47,5 +49,10 @@ public class BookCategory implements Serializable {
 
     public void setBook(List<Book> book) {
         this.book = book;
+    }
+
+    @Override
+    public String toString(){
+        return category_name;
     }
 }
