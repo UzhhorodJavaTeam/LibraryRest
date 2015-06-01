@@ -11,13 +11,13 @@ import java.util.List;
 @Repository
 public interface CategoryDAO {
 
-    public void addCategory(BookCategory category);
-
-    public void editCategory(BookCategory category);
+    public Integer saveOrUpdate(BookCategory category);
 
     public List<BookCategory> getAllCategory();
 
     public BookCategory findById(Integer category_id);
 
     public void deleteCategory(Integer category_id);
+
+    public Integer update(BookCategory category);
 }

@@ -28,14 +28,9 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     @Transactional
-    public void addCategory(BookCategory category) {
-        sessionFactory.getCurrentSession().save(category);
-    }
-
-    @Override
-    @Transactional
-    public void editCategory(BookCategory category) {
-        sessionFactory.getCurrentSession().update(category);
+    public Integer saveOrUpdate(BookCategory category) {
+        sessionFactory.getCurrentSession().saveOrUpdate(category);
+        return category.getCategory_id();
     }
 
     @Override
@@ -51,5 +46,12 @@ public class CategoryDAOImpl implements CategoryDAO {
     public void deleteCategory(Integer category_id) {
         BookCategory bookCategory = (BookCategory) sessionFactory.getCurrentSession().load(BookCategory.class, category_id);
         sessionFactory.getCurrentSession().delete(bookCategory);
+    }
+
+    @Override
+    @Transactional
+    public Integer update(BookCategory category){
+        sessionFactory.getCurrentSession().merge(category);
+        return category.getCategory_id();
     }
 }

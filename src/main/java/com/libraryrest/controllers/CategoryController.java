@@ -1,8 +1,11 @@
 package com.libraryrest.controllers;
 
 import com.libraryrest.DAO.CategoryDAO;
+import com.libraryrest.exceptions.InvalidRequestException;
 import com.libraryrest.models.BookCategory;
+import com.libraryrest.validators.CategoryValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,39 +14,51 @@ import java.util.List;
  * Created by yura on 27.05.15.
  */
 @RestController
+@RequestMapping("/categories")
 public class CategoryController {
 
     @Autowired
-    CategoryDAO bookCategoryDAO;
+    CategoryDAO categoryDAO;
 
-    @RequestMapping(value = "/categories", method = RequestMethod.GET)
-    public List getBookCategory() {
-        return bookCategoryDAO.getAllCategory();
+    @Autowired
+    CategoryValidator validator;
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public List getCategory() {
+        return categoryDAO.getAllCategory();
     }
 
-    @RequestMapping(value = "/categories/{category}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{category}", method = RequestMethod.GET)
     public BookCategory showCategory(@PathVariable Integer category) {
-        return bookCategoryDAO.findById(category);
+        return categoryDAO.findById(category);
     }
 
-    @RequestMapping(value = "/categories/add", method = RequestMethod.POST)
-    public BookCategory addCategory(@ModelAttribute BookCategory category) {
-        bookCategoryDAO.addCategory(category);
-        return bookCategoryDAO.findById(category.getCategory_id());
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public BookCategory addCategory(@RequestBody BookCategory category, BindingResult bindingResult) {
+        validator.validate(category, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("Invalid category", bindingResult);
+        }
+        Integer categoryId = categoryDAO.saveOrUpdate(category);
+        category.setCategory_id(categoryId);
+        return category;
     }
 
-    @RequestMapping(value = "/categories/{category}/edit", method = RequestMethod.POST)
-    public BookCategory editCategory(@PathVariable Integer category,@ModelAttribute BookCategory bookCategory) {
-        bookCategoryDAO.findById(category);
+    @RequestMapping(value = "/{category}/edit", method = RequestMethod.POST)
+    public BookCategory editCategory(@PathVariable Integer category, @RequestBody BookCategory bookCategory, BindingResult bindingResult) {
+        validator.validate(bookCategory,bindingResult);
+        if(bindingResult.hasErrors()){
+            throw new InvalidRequestException("Invalid category",bindingResult);
+        }
         bookCategory.setCategory_id(category);
-        bookCategoryDAO.editCategory(bookCategory);
-        return bookCategoryDAO.findById(bookCategory.getCategory_id());
+        categoryDAO.update(bookCategory);
+        return bookCategory;
     }
 
-    @RequestMapping(value = "/categories/{category}/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{category}/delete", method = RequestMethod.DELETE)
     public String deleteCategory(@PathVariable Integer category) {
-        bookCategoryDAO.findById(category);
-        bookCategoryDAO.deleteCategory(category);
+        categoryDAO.findById(category);
+        categoryDAO.deleteCategory(category);
         return "The delete was successful";
     }
 }
