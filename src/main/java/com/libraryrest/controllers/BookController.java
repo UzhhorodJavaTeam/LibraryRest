@@ -1,13 +1,17 @@
 package com.libraryrest.controllers;
 
 import com.libraryrest.DAO.BookDAO;
+import com.libraryrest.exceptions.InvalidRequestException;
 import com.libraryrest.models.Book;
+import com.libraryrest.validators.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -22,6 +26,9 @@ public class BookController {
     @Autowired
     BookDAO bookDAO;
 
+    @Autowired
+    BookValidator validator;
+
     @RequestMapping(value = "/books", method = RequestMethod.GET)
     public List<Book> getBooks(ModelMap model) {
         List<Book> books = bookDAO.getAllBook();
@@ -32,7 +39,12 @@ public class BookController {
 
 
     @RequestMapping(value = "/books/add", method = RequestMethod.POST)
-    public Book postAddBookPage(@RequestBody Book book) {
+    public Book postAddBookPage(@RequestBody Book book, BindingResult bindingResult) {
+
+        validator.validate(book, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("Invalid book", bindingResult);
+        }
 
         Integer bookId = bookDAO.saveOrUpdate(book);
         book.setBook_id(bookId);
@@ -42,7 +54,14 @@ public class BookController {
 
 
     @RequestMapping(value = "/books/{bookId}/edit", method = RequestMethod.POST)
-    public Book postEditBookPage(@PathVariable("bookId") Integer bookId, @RequestBody Book book){
+    public Book postEditBookPage(@PathVariable("bookId") Integer bookId, @RequestBody Book book, BindingResult bindingResult){
+
+
+        validator.validate(book, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("Invalid book", bindingResult);
+        }
+
         book.setBook_id(bookId);
         bookDAO.update(book);
 
