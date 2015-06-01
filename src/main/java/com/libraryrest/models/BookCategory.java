@@ -1,5 +1,7 @@
 package com.libraryrest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,35 +14,37 @@ public class BookCategory implements Serializable {
     @Id
     @Column(name = "category_id")
     @GeneratedValue
-    private Long category_id;
+    private Integer category_id;
 
     @Column(name = "category_title")
-    private String category_name;
+    private String category_title;
 
+
+    @JsonIgnore
     @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER)
     private List<Book> book = new ArrayList<Book>();
 
     public BookCategory() {
     }
 
-    public Long getCategory_id() {
+    public Integer getCategory_id() {
         return category_id;
     }
 
     public BookCategory(String category_name) {
-        this.category_name = category_name;
+        this.category_title = category_name;
     }
 
-    public void setCategory_id(Long category_id) {
+    public void setCategory_id(Integer category_id) {
         this.category_id = category_id;
     }
 
-    public String getCategory_name() {
-        return category_name;
+    public String getCategory_title() {
+        return category_title;
     }
 
-    public void setCategory_name(String category_name) {
-        this.category_name = category_name;
+    public void setCategory_title(String category_name) {
+        this.category_title = category_name;
     }
 
     public List<Book> getBook() {
@@ -53,6 +57,6 @@ public class BookCategory implements Serializable {
 
     @Override
     public String toString(){
-        return category_name;
+        return category_title;
     }
 }
