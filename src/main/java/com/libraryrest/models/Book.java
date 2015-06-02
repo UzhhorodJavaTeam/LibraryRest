@@ -14,8 +14,8 @@ import java.util.*;
 public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id")
-    Integer book_id;
+    @Column(name = "bookId")
+    Integer bookId;
 
     @Column(name = "name")
     String name;
@@ -24,12 +24,12 @@ public class Book implements Serializable {
     @Column(name = "description")
     String description;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "book")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "books")
     List<Author> authors = new ArrayList<Author>();
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "catalog", joinColumns = @JoinColumn(name = "id_book"), inverseJoinColumns = @JoinColumn(name = "id_category"))
+    @JoinTable(name = "catalog", joinColumns = @JoinColumn(name = "bookId"), inverseJoinColumns = @JoinColumn(name = "categoryId"))
     private BookCategory bookCategory;
 
 
@@ -66,12 +66,12 @@ public class Book implements Serializable {
         this.authors = authors;
     }
 
-    public Integer getBook_id() {
-        return book_id;
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public void setBook_id(Integer book_id) {
-        this.book_id = book_id;
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     public BookCategory getBookCategory() {

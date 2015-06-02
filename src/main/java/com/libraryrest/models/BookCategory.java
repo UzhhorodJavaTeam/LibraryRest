@@ -12,51 +12,51 @@ import java.util.List;
 public class BookCategory implements Serializable {
 
     @Id
-    @Column(name = "category_id")
+    @Column(name = "categoryId")
     @GeneratedValue
-    private Integer category_id;
+    private Integer categoryId;
 
-    @Column(name = "category_title")
-    private String category_title;
+    @Column(name = "categoryTitle")
+    private String categoryTitle;
 
 
     @JsonIgnore
     @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER)
-    private List<Book> book = new ArrayList<Book>();
+    private List<Book> books = new ArrayList<Book>();
 
     public BookCategory() {
     }
 
-    public Integer getCategory_id() {
-        return category_id;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public BookCategory(String category_name) {
-        this.category_title = category_name;
+    public BookCategory(String categoryName) {
+        this.categoryTitle = categoryName;
     }
 
-    public void setCategory_id(Integer category_id) {
-        this.category_id = category_id;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getCategory_title() {
-        return category_title;
+    public String getCategoryTitle() {
+        return categoryTitle;
     }
 
-    public void setCategory_title(String category_name) {
-        this.category_title = category_name;
+    public void setCategoryTitle(String categoryName) {
+        this.categoryTitle = categoryName;
     }
 
-    public List<Book> getBook() {
-        return book;
+    public List<Book> getBooks() {
+        return books;
     }
 
-    public void setBook(List<Book> book) {
-        this.book = book;
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     @Override
     public String toString(){
-        return category_title;
+        return categoryTitle;
     }
 }
