@@ -16,7 +16,7 @@ import java.util.List;
  * Created by yura on 27.05.15.
  */
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/")
 public class CategoryController {
 
     final Logger logger = LogManager.getLogger(getClass());
@@ -27,23 +27,24 @@ public class CategoryController {
     @Autowired
     CategoryValidator validator;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "/categories", method = RequestMethod.GET)
     public List getCategory() {
         logger.info("GET: /categories");
         return categoryDAO.getAllCategory();
     }
 
-    @RequestMapping(value = "/{category}", method = RequestMethod.GET)
-    public BookCategory showCategory(@PathVariable Integer category) {
-        logger.info("Get: /category");
-        return categoryDAO.findById(category);
+    @RequestMapping(value = "/categories/{categoryId}", method = RequestMethod.GET)
+    public BookCategory showCategory(@PathVariable Integer categoryId) {
+        logger.info("Get: /categories/" + categoryId);
+        return categoryDAO.findById(categoryId);
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/categories/add", method = RequestMethod.POST)
     public BookCategory addCategory(@RequestBody BookCategory category, BindingResult bindingResult) {
-        logger.info("Add category");
+        logger.info("POST: /categories/add");
         validator.validate(category, bindingResult);
         if (bindingResult.hasErrors()) {
+            logger.error("POST: /categories/add" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
         Integer categoryId = categoryDAO.saveOrUpdate(category);
@@ -51,11 +52,12 @@ public class CategoryController {
         return category;
     }
 
-    @RequestMapping(value = "/{category}/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/categories/{category}/edit", method = RequestMethod.POST)
     public BookCategory editCategory(@PathVariable Integer category, @RequestBody BookCategory bookCategory, BindingResult bindingResult) {
-        logger.info("Edit" + category + "category");
+        logger.info("POST: /categories/" + category + "/edit");
         validator.validate(bookCategory, bindingResult);
         if (bindingResult.hasErrors()) {
+            logger.error("POST: /categories/" + category + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
         bookCategory.setCategoryId(category);
@@ -63,9 +65,9 @@ public class CategoryController {
         return bookCategory;
     }
 
-    @RequestMapping(value = "/{category}/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/categories/{category}/delete", method = RequestMethod.DELETE)
     public String deleteCategory(@PathVariable Integer category) {
-        logger.info("Delete" + category + "category");
+        logger.info("DELETE: /categories" + category + "/delete");
         categoryDAO.findById(category);
         categoryDAO.deleteCategory(category);
         return "The delete was successful";

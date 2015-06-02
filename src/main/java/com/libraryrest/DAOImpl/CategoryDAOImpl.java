@@ -44,7 +44,7 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Override
     @Transactional
     public void deleteCategory(Integer categoryId) {
-        BookCategory bookCategory = (BookCategory) sessionFactory.getCurrentSession().load(BookCategory.class, categoryId);
+        BookCategory bookCategory = findById(categoryId);
         sessionFactory.getCurrentSession().delete(bookCategory);
     }
 
