@@ -40,7 +40,7 @@ public class CategoryController {
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
         Integer categoryId = categoryDAO.saveOrUpdate(category);
-        category.setCategory_id(categoryId);
+        category.setCategoryId(categoryId);
         return category;
     }
 
@@ -50,7 +50,7 @@ public class CategoryController {
         if(bindingResult.hasErrors()){
             throw new InvalidRequestException("Invalid category",bindingResult);
         }
-        bookCategory.setCategory_id(category);
+        bookCategory.setCategoryId(category);
         categoryDAO.update(bookCategory);
         return bookCategory;
     }

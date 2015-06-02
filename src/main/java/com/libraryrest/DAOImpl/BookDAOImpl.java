@@ -1,17 +1,11 @@
 package com.libraryrest.DAOImpl;
 
 import com.libraryrest.DAO.BookDAO;
-import com.libraryrest.models.Author;
 import com.libraryrest.models.Book;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.bytecode.buildtime.spi.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -54,22 +48,22 @@ public class BookDAOImpl implements BookDAO {
     @Transactional
     public Integer saveOrUpdate(Book book) {
         sessionFactory.getCurrentSession().saveOrUpdate(book);
-        return book.getBook_id();
+        return book.getBookId();
     }
 
     @Override
     @Transactional
     public Integer update(Book book){
         sessionFactory.getCurrentSession().merge(book);
-        return book.getBook_id();
+        return book.getBookId();
     }
 
 
 
     @Override
     @Transactional
-    public void deleteBook(Integer id) {
-        Book book = findById(id);
+    public void deleteBook(Integer bookId) {
+        Book book = findById(bookId);
         sessionFactory.getCurrentSession().delete(book);
     }
 

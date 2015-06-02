@@ -11,67 +11,67 @@ import java.util.List;
 public class Author {
 
     @Id
-    @Column(name = "author_id")
+    @Column(name = "authorId")
     @GeneratedValue
-    private Integer author_id;
+    private Integer authorId;
 
-    @Column(name = "first_name")
-    private String first_name;
+    @Column(name = "firstName")
+    private String firstName;
 
-    @Column(name = "last_name")
-    private String last_name;
+    @Column(name = "lastName")
+    private String lastName;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "book_author", joinColumns = {
-            @JoinColumn(name = "author_id", nullable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "book_id",
+            @JoinColumn(name = "authorId", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "bookId",
                     nullable = false, updatable = false)})
-    private List<Book> book = new ArrayList<Book>();
+    private List<Book> books = new ArrayList<Book>();
 
     public Author() {
     }
 
-    public Author(String last_name, String first_name) {
-        this.last_name = last_name;
-        this.first_name = first_name;
+    public Author(String lastName, String firstName) {
+        this.lastName = lastName;
+        this.firstName = firstName;
     }
 
-    public List<Book> getBook() {
-        return book;
+    public List<Book> getBooks() {
+        return books;
     }
 
-    public void setBook(List<Book> book) {
-        this.book = book;
+    public void setBooks(List<Book> book) {
+        this.books = book;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public void setAuthor_id(Integer author_id) {
-        this.author_id = author_id;
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
     }
 
     public Integer getAuthorId() {
-        return author_id;
+        return authorId;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
 
     @Override
     public String toString(){
-        return "Name: "+ first_name + " " +  last_name;
+        return "Name: "+ firstName + " " + lastName;
     }
 }

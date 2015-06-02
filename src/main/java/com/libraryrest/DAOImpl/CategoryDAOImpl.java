@@ -30,21 +30,21 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Transactional
     public Integer saveOrUpdate(BookCategory category) {
         sessionFactory.getCurrentSession().saveOrUpdate(category);
-        return category.getCategory_id();
+        return category.getCategoryId();
     }
 
     @Override
     @Transactional
-    public BookCategory findById(Integer category_id) {
-        Query query = sessionFactory.getCurrentSession().createQuery("from BookCategory where category_id = :category_id");
-        query.setParameter("category_id", category_id);
+    public BookCategory findById(Integer categoryId) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from BookCategory where categoryId = :categoryId");
+        query.setParameter("categoryId", categoryId);
         return (BookCategory) query.uniqueResult();
     }
 
     @Override
     @Transactional
-    public void deleteCategory(Integer category_id) {
-        BookCategory bookCategory = (BookCategory) sessionFactory.getCurrentSession().load(BookCategory.class, category_id);
+    public void deleteCategory(Integer categoryId) {
+        BookCategory bookCategory = (BookCategory) sessionFactory.getCurrentSession().load(BookCategory.class, categoryId);
         sessionFactory.getCurrentSession().delete(bookCategory);
     }
 
@@ -52,6 +52,6 @@ public class CategoryDAOImpl implements CategoryDAO {
     @Transactional
     public Integer update(BookCategory category){
         sessionFactory.getCurrentSession().merge(category);
-        return category.getCategory_id();
+        return category.getCategoryId();
     }
 }
