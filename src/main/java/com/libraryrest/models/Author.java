@@ -12,7 +12,7 @@ public class Author {
 
     @Id
     @Column(name = "authorId")
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer authorId;
 
     @Column(name = "firstName")
@@ -22,11 +22,7 @@ public class Author {
     private String lastName;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "book_author", joinColumns = {
-            @JoinColumn(name = "authorId", nullable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "bookId",
-                    nullable = false, updatable = false)})
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "authors", fetch = FetchType.EAGER)
     private List<Book> books = new ArrayList<Book>();
 
     public Author() {
@@ -71,7 +67,7 @@ public class Author {
 
 
     @Override
-    public String toString(){
-        return "Name: "+ firstName + " " + lastName;
+    public String toString() {
+        return "Name: " + firstName + " " + lastName;
     }
 }
