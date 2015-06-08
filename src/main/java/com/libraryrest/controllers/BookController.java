@@ -1,22 +1,20 @@
 package com.libraryrest.controllers;
 
 import com.libraryrest.DAO.BookDAO;
+import com.libraryrest.DAO.CategoryDAO;
 import com.libraryrest.exceptions.InvalidRequestException;
+import com.libraryrest.models.Author;
 import com.libraryrest.models.Book;
+import com.libraryrest.models.BookCategory;
 import com.libraryrest.validators.BookValidator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by superuser on 27.05.15.
@@ -31,71 +29,90 @@ public class BookController {
     BookDAO bookDAO;
 
     @Autowired
+    CategoryDAO categoryDAO;
+
+
+    @Autowired
     BookValidator validator;
 
+
     @RequestMapping(value = "/books", method = RequestMethod.GET)
-    public List<Book> getBooks(ModelMap model) {
+    public List<Book> getBooks() {
         logger.info("GET: /books");
 
         List<Book> books = bookDAO.getAllBook();
-        model.addAttribute("books", books);
 
         return books;
     }
 
 
-    @RequestMapping(value = "/books/add", method = RequestMethod.POST)
-    public Book postAddBookPage(@RequestBody Book book, BindingResult bindingResult) {
-        logger.info("POST: /books/add");
+
+    @RequestMapping(value = "categories/{categoryId}/books", method = RequestMethod.GET)
+    public List<Book> getBooksByCategoryId(@PathVariable("categoryId") Integer categoryId) {
+        logger.info("GET: categories/"+ categoryId +"/books");
+
+        List<Book> books = bookDAO.findByCategoryId(categoryId);
+
+        return books;
+    }
+
+
+    @RequestMapping(value = "categories/{categoryId}/books/add", method = RequestMethod.POST)
+    public Book postAddBookPage(@PathVariable("categoryId") Integer categoryId, @RequestBody Book book, BindingResult bindingResult) {
+        logger.info("POST: categories/" + categoryId + "/books/add");
         validator.validate(book, bindingResult);
         if (bindingResult.hasErrors()) {
-            logger.error("POST: /books/add " + bindingResult);
+            logger.error("POST: categories/" + categoryId + "/books/add " + bindingResult);
             throw new InvalidRequestException("Invalid book", bindingResult);
         }
-
+        BookCategory bookCategory = categoryDAO.findById(categoryId);
+        book.setBookCategory(bookCategory);
         Integer bookId = bookDAO.saveOrUpdate(book);
-        book.setBook_id(bookId);
+        book.setBookId(bookId);
+
         return book;
     }
 
 
-
-    @RequestMapping(value = "/books/{bookId}/edit", method = RequestMethod.POST)
-    public Book postEditBookPage(@PathVariable("bookId") Integer bookId, @RequestBody Book book, BindingResult bindingResult){
-        logger.info("POST: /books/" + bookId + "/edit");
+    @RequestMapping(value = "categories/{categoryId}/books/{bookId}/edit", method = RequestMethod.POST)
+    public Book postEditBookPage(@PathVariable("categoryId") Integer categoryId, @PathVariable("bookId") Integer bookId, @RequestBody Book book, BindingResult bindingResult) {
+        logger.info("POST: categories/" + categoryId + "/books/" + bookId + "/edit");
 
         validator.validate(book, bindingResult);
         if (bindingResult.hasErrors()) {
-            logger.error("POST: /books/"+ bookId +"/edit"+ bindingResult);
+            logger.error("POST: categories/" + categoryId + "/books/" + bookId + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid book", bindingResult);
         }
+        book.setBookCategory(categoryDAO.findById(categoryId));
+        book.setBookId(bookId);
 
-        book.setBook_id(bookId);
         bookDAO.update(book);
 
         return book;
     }
 
 
-    @RequestMapping(value = "/books/{bookId}", method = RequestMethod.GET)
-    public Book getBookPage(@PathVariable("bookId") Integer bookId, ModelMap model) {
-        logger.info("GET: /books/" + bookId);
-
+    @RequestMapping(value = "categories/{categoryId}/books/{bookId}", method = RequestMethod.GET)
+    public Book getBookPage(@PathVariable("categoryId") Integer categoryId,@PathVariable("bookId") Integer bookId) {
+        logger.info("GET: categories/"+ categoryId+"/books/" + bookId);
         Book book = bookDAO.findById(bookId);
-        model.addAttribute("book", book);
-
+        BookCategory category = categoryDAO.findById(categoryId);
+        if (!book.getBookCategory().equals(category)){
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return book;
-
     }
 
 
-    @RequestMapping(value = "/books/{bookId}/delete", method = RequestMethod.GET)
-    public String getDeleteCurrentCategory(@PathVariable("bookId") Integer bookId) {
-        logger.info("GET: /books/" + bookId + "/delete");
-
+    @RequestMapping(value = "categories/{categoryId}/books/{bookId}/delete", method = RequestMethod.GET)
+    public String getDeleteCurrentCategory(@PathVariable("categoryId") Integer categoryId ,@PathVariable("bookId") Integer bookId) {
+        logger.info("GET: categories/"+ categoryId +"/books/" + bookId + "/delete");
         bookDAO.deleteBook(bookId);
 
-        return "Successfully";
+        return "Deleted Successfully";
     }
-
 }

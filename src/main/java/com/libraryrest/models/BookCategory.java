@@ -17,7 +17,7 @@ public class BookCategory implements Serializable {
     @Column(name = "categoryTitle")
     private String categoryTitle;
 
-    @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER,cascade = {CascadeType.REFRESH,CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Book> books = new ArrayList<Book>();
 
     public BookCategory() {
