@@ -32,6 +32,18 @@ public class BookDAOImpl implements BookDAO {
 
     @Override
     @Transactional
+    public List<Book> findByCategoryId(Integer categoryId){
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Book b WHERE b.bookCategory.categoryId = :categoryId");
+        query.setParameter("categoryId", categoryId);
+
+        @SuppressWarnings("unchecked")
+        List<Book> itemList = (List<Book>) query.list();
+
+        return itemList;
+    }
+
+    @Override
+    @Transactional
     public Book findById(Integer bookId) {
         String hql = "from Book b where b.id = :bookId";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);

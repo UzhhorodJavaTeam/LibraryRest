@@ -1,7 +1,5 @@
 package com.libraryrest.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,9 +17,7 @@ public class BookCategory implements Serializable {
     @Column(name = "categoryTitle")
     private String categoryTitle;
 
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER,cascade = {CascadeType.REFRESH,CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Book> books = new ArrayList<Book>();
 
     public BookCategory() {
@@ -56,7 +52,7 @@ public class BookCategory implements Serializable {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return categoryTitle;
     }
 }

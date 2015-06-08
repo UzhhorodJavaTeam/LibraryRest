@@ -1,10 +1,12 @@
 package com.libraryrest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by superuser on 25.05.15.
@@ -12,6 +14,7 @@ import java.util.*;
 @Entity
 @Table(name = "books")
 public class Book implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bookId")
@@ -20,21 +23,19 @@ public class Book implements Serializable {
     @Column(name = "name")
     String name;
 
-
     @Column(name = "description")
     String description;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "books")
+    @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "bookId"), inverseJoinColumns = @JoinColumn(name = "authorId"))
     List<Author> authors = new ArrayList<Author>();
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,CascadeType.PERSIST})
     @JoinTable(name = "catalog", joinColumns = @JoinColumn(name = "bookId"), inverseJoinColumns = @JoinColumn(name = "categoryId"))
     private BookCategory bookCategory;
 
-
-
-    public Book(){
+    public Book() {
     }
 
     public Book(String name, String description) {
@@ -82,7 +83,9 @@ public class Book implements Serializable {
         this.bookCategory = bookCategory;
     }
 
-    public String toString(){
+    public String toString() {
         return "Name: " + name + " Description: " + description + " Authors: " + authors;
     }
+
+
 }

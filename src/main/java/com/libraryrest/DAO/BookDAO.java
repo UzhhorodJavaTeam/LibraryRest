@@ -20,4 +20,5 @@ public interface BookDAO {
 
     public Integer update(Book book);
 
+    public List<Book> findByCategoryId(Integer categoryId);
 }
