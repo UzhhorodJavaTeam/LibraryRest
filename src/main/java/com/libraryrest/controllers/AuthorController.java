@@ -67,7 +67,7 @@ public class AuthorController {
 
     @RequestMapping(value = "/{author}", method = RequestMethod.DELETE)
     public String deleteAuthor(@PathVariable Integer author) {
-        logger.info("DELETE: /authors" + author + "/delete");
+        logger.info("DELETE: /authors/" + author + "/delete");
         authorDAO.findById(author);
         authorDAO.deleteAuthor(author);
         return "The delete was successful";
