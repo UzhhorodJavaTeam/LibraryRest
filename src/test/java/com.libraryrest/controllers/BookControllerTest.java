@@ -93,7 +93,7 @@ public class BookControllerTest {
         mockMvc.perform(delete("/categories/{categoryId}/books/{bookId}", categoryId, bookId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.TEXT_PLAIN))
-                .andExpect(jsonPath("$", is("Deleted Successfully")));
+                .andExpect(content().string("Deleted Successfully"));
     }
 
     @Test

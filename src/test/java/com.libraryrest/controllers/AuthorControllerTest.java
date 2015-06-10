@@ -2,27 +2,23 @@ package com.libraryrest.controllers;
 
 import com.libraryrest.DAO.AuthorDAO;
 import com.libraryrest.models.Author;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-
-
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import org.junit.Before;
-import org.mockito.InjectMocks;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Created by superuser on 09.06.15.
@@ -62,8 +58,8 @@ public class AuthorControllerTest {
 
     @Test
     public void testGetAllAuthors() throws Exception {
-        Author author1 = new Author("test1","test1");
-        Author author2 = new Author("test2","test2");
+        Author author1 = new Author("test1", "test1");
+        Author author2 = new Author("test2", "test2");
         authorDAO.saveOrUpdate(author1);
         authorDAO.saveOrUpdate(author2);
         mockMvc.perform(get("/authors")
@@ -84,7 +80,7 @@ public class AuthorControllerTest {
     public void testGetAuthorById() throws Exception {
         Author author = new Author("Test for view", "Test for view");
         authorDAO.saveOrUpdate(author);
-        mockMvc.perform(get("/authors/"+author.getAuthorId()))
+        mockMvc.perform(get("/authors/" + author.getAuthorId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.authorId", is(author.getAuthorId())))
                 .andExpect(jsonPath("$.firstName", is("Test for view")))
@@ -108,9 +104,10 @@ public class AuthorControllerTest {
     public void testDeleteAuthor() throws Exception {
         Author author = new Author("Test for delete", "Test for delete");
         authorDAO.saveOrUpdate(author);
-        mockMvc.perform(delete("/authors/"+ author.getAuthorId())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/authors/" + author.getAuthorId())
+                .contentType(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk())
+                .andExpect(content().string("The delete was successful"));
     }
 
     @Test
@@ -121,7 +118,7 @@ public class AuthorControllerTest {
                 .andExpect(jsonPath("$.code", is("InvalidRequest")))
                 .andExpect(jsonPath("$.message", is("Invalid author")))
                 .andExpect(jsonPath("$.fieldErrors", hasSize(2)))
-                .andExpect(jsonPath("$.fieldErrors[*].resource", containsInAnyOrder("author","author")))
+                .andExpect(jsonPath("$.fieldErrors[*].resource", containsInAnyOrder("author", "author")))
                 .andExpect(jsonPath("$.fieldErrors[*].field", containsInAnyOrder(
                         "firstName", "lastName")))
                 .andExpect(jsonPath("$.fieldErrors[*].code", containsInAnyOrder(

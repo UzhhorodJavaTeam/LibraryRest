@@ -86,8 +86,9 @@ public class CategoryControllerTest {
         categoryDAO.saveOrUpdate(category);
         Integer categoryId = category.getCategoryId();
         mockMvc.perform(delete("/categories/{categoryId}", categoryId))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.TEXT_PLAIN))
-                .andExpect(jsonPath("$", is("The delete was successful")));
+                .andExpect(content().string("The delete was successful"));
     }
 
 
