@@ -1,0 +1,23 @@
+<form>
+    <div class="form-group">
+        <label for="exampleInputLogin">Login</label>
+        <input type="text" class="form-control" id="exampleInputLogin" placeholder="Login" ng-model="newuser.login">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email" ng-model="newuser.email">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password" ng-model="newuser.password">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputFirstName">First name</label>
+        <input type="text" class="form-control" id="exampleInputFirstName" placeholder="First Name" ng-model="newuser.firstName">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputLastName">Last name</label>
+        <input type="text" class="form-control" id="exampleInputLastName" placeholder="Last Name" ng-model="newuser.lastName">
+    </div>
+    <button type="submit" class="btn btn-success" ng-click="register(newuser)">Register me!</button>
+</form>

@@ -1,0 +1,51 @@
+<script src="/resources/js/diff_function.js"></script>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addModalLabel">Add Book</h4>
+            </div>
+            <form name="Add_form" class="form-horizontal" id="add_edit_form" novalidate>
+            <div class="modal-body">
+                    <div class="control-group">
+                        <label class="control-label" for="book_name">Book Name</label>
+
+                        <div class="controls">
+                            <input class="form-control" type="text" id="book_name" ng-model="newbook.name"
+                                   placeholder="Please, type the book name" required>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="book_desc">Book Description</label>
+
+                        <div class="controls">
+                            <input class="form-control" type="text" id="book_desc" ng-model="newbook.description"
+                                   placeholder="Please, type the book description" required>
+                        </div>
+                    </div>
+                <div class="row">
+                    <div class="control-group col-md-5" style="float: left">
+                        <label class="control-label" for="author_select">Authors:</label>
+                        <div class="controls">
+                            <select id="author_select" class="selectpicker" multiple>
+                                    <option ng-repeat="author in authors" value="{{author.authorId}}">{{author.firstName + ' ' + author.lastName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-7" style="padding-top: 35px">
+                        <a>No found the required author? Add!</a>
+                    </div>
+                    <!--<div ng-repeat="author in authors">-->
+                        <!--<h1>{{author.firstName + '' + author.lastName}}</h1>-->
+                    <!--</div>-->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!newbook.name || !newbook.description" ng-click="addBook(newbook)" data-dismiss="modal">Add Book</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

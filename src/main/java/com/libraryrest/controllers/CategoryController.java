@@ -2,9 +2,11 @@ package com.libraryrest.controllers;
 
 import com.libraryrest.DAO.BookDAO;
 import com.libraryrest.DAO.CategoryDAO;
+import com.libraryrest.DAO.UserDao;
 import com.libraryrest.exceptions.InvalidRequestException;
 import com.libraryrest.models.Book;
 import com.libraryrest.models.BookCategory;
+import com.libraryrest.models.User;
 import com.libraryrest.validators.BookValidator;
 import com.libraryrest.validators.CategoryValidator;
 import org.apache.log4j.LogManager;
@@ -29,6 +31,9 @@ public class CategoryController {
 
     @Autowired
     BookDAO bookDAO;
+
+    @Autowired
+    UserDao userDAO;
 
     @Autowired
     CategoryValidator categoryValidator;
@@ -83,6 +88,16 @@ public class CategoryController {
     }
 
 
+    @RequestMapping(value = "/{categoryId}/books/page={pageNum}", method = RequestMethod.GET)
+    public List<Book> getBooksByCategoryIdAndPage(@PathVariable("categoryId") Integer categoryId,
+                                                  @PathVariable("pageNum") Integer page) {
+        logger.info("GET: categories/"+ categoryId +"/books/page=" + page);
+
+        List<Book> books = bookDAO.getBooksByCategoryAndPage(categoryId, page);
+
+        return books;
+    }
+
     @RequestMapping(value = "/{categoryId}/books", method = RequestMethod.GET)
     public List<Book> getBooksByCategoryId(@PathVariable("categoryId") Integer categoryId) {
         logger.info("GET: categories/"+ categoryId +"/books");
@@ -105,6 +120,7 @@ public class CategoryController {
         book.setBookCategory(bookCategory);
         Integer bookId = bookDAO.saveOrUpdate(book);
         book.setBookId(bookId);
+
 
         return book;
     }
@@ -146,10 +162,11 @@ public class CategoryController {
 
     @RequestMapping(value = "/{categoryId}/books/{bookId}", method = RequestMethod.DELETE)
     public String getDeleteCurrentCategory(@PathVariable("categoryId") Integer categoryId ,@PathVariable("bookId") Integer bookId) {
-        logger.info("GET: categories/"+ categoryId +"/books/" + bookId + "/delete");
+        logger.info("DELETE: categories/"+ categoryId +"/books/" + bookId + "/delete");
         bookDAO.deleteBook(bookId);
 
         return "Deleted Successfully";
     }
+
 
 }

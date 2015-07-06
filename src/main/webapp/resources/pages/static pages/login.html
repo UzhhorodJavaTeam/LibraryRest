@@ -1,0 +1,29 @@
+<head>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+</head>
+<form action="/j_spring_security_check" method="post">
+    <div class="form-group">
+        <label for="login">Login</label>
+        <input class="form-control" type="text" id="login" name="login"/>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input class="form-control" type="password" id="password" name="password"/>
+    </div>
+
+        <p>
+            <input type="checkbox" name="remember-me" id="remember" value="true" class="css-checkbox"/>
+            <label for="remember" class="css-label">Remember me</label>
+        </p>
+    <div class="row">
+        <div class="col-md-2">
+            <input style="float: left" class="btn btn-success" type="submit" value="Login"/>
+        </div>
+        <div class="col-md-10">
+            <p style="padding: 5px">Haven`t account? <a ng-href="#/register">Sign up!</a></p>
+        </div>
+    </div>
+</form>

@@ -43,4 +43,13 @@ public class BookController {
         return books;
     }
 
+    @RequestMapping(value = "/books/page={pageNum}", method = RequestMethod.GET)
+    public List<Book> getBooksByPage(@PathVariable("pageNum") Integer page) {
+        logger.info("GET: /books/page=" + page);
+
+        List<Book> books = bookDAO.getBooksByPage(page);
+
+        return books;
+    }
+
 }

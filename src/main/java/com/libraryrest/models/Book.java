@@ -1,9 +1,13 @@
 package com.libraryrest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.java.util.jar.pack.*;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

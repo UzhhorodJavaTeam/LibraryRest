@@ -1,0 +1,26 @@
+<div class="modal fade" id="editCategory" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="editModalLabel">Edit Category</h4>
+            </div>
+            <form name="Add_form" class="form-horizontal" id="add_edit_form" novalidate>
+                <div class="modal-body">
+                    <div class="control-group">
+                        <label class="control-label" for="category_name">Category Name</label>
+
+                        <div class="controls">
+                            <input class="form-control" type="text" id="category_name" ng-model="currentCategory.categoryTitle"
+                                   placeholder="Please, type the category name" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="!currentCategory.categoryTitle" ng-click="editCategory(currentCategory, currentCategory.categoryId)" data-dismiss="modal">Edit Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

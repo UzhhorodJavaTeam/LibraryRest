@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<!-- define angular app -->
+<html ng-app="app">
+
+<head>
+    <base href="/">
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <!-- SCROLLS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <link href="/resources/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="/resources/css/style.css" rel="stylesheet" />
+    <!-- SPELLS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" ></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="/resources/js/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    <script src="/resources/js/bootstrap-select.js"></script>
+    <script src="/resources/js/app.js"></script>
+</head>
+
+<!-- define angular controller -->
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-default">
+        <div class="container col-md-12">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Online Library</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a ng-href="/"><i class="fa fa-home"></i> Home</a></li>
+                <li><a ng-href="/login"><i class="fa fa-sign-in"></i> Login</a></li>
+                <li><a ng-href="/about"><i class="fa fa-shield"></i> About</a></li>
+                <li><a ng-href="/contact"><i class="fa fa-comment"></i> Contact</a></li>
+                <li><a href="/logout"><i class="fa fa-sign-out"></i> Log out</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <category-sidebar class="col-sm-3"></category-sidebar>
+
+        <div ng-view class="col-sm-9" ></div>
+    </div>
+</div>
+
+<div class="container-fluid">
+<hr>
+<footer class="text-center row">
+    <p>Made by Uzhhorod Java Team</p>
+    <p>2015</p>
+</footer>
+</div>
+</body>
+</html>

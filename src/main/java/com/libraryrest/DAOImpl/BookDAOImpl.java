@@ -17,16 +17,50 @@ import java.util.List;
 @Component
 public class BookDAOImpl implements BookDAO {
 
+    private Integer count;
+    private Integer startAt;
 
     @Autowired
     private SessionFactory sessionFactory;
 
 
     @Override
+    public List<Book> getBooksByPage(Integer page) {
+        count = 12;
+        startAt =  (count * (page - 1));
+
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Book");
+        query.setFirstResult(startAt);
+        query.setMaxResults(count);
+
+        @SuppressWarnings("unchecked")
+        List<Book> books = (List<Book>) query.list();
+
+        return books;
+    }
+
+    @Override
     @Transactional
     public List<Book> getAllBook() {
         Query query = sessionFactory.getCurrentSession().createQuery("from Book");
         List<Book> books = (List<Book>) query.list();;
+        return books;
+    }
+
+    @Override
+    @Transactional
+    public List<Book> getBooksByCategoryAndPage(Integer categoryId, Integer page) {
+        count = 12;
+        startAt =  (count * (page - 1));
+
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Book b WHERE b.bookCategory.categoryId = :categoryId");
+        query.setParameter("categoryId", categoryId);
+        query.setFirstResult(startAt);
+        query.setMaxResults(count);
+
+        @SuppressWarnings("unchecked")
+        List<Book> books = (List<Book>) query.list();
+
         return books;
     }
 

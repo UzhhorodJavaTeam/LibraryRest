@@ -1,0 +1,98 @@
+<script src="/resources/js/diff_function.js"></script>
+
+<div class="row">
+    <div class="col-lg-4">
+        <h3>{{"Found books: " +booksCount}}</h3>
+    </div>
+    <div class="col-lg-8" style="float: right">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal">
+            <i class="fa fa-plus"></i>
+            Add Book
+        </button>
+    </div>
+</div>
+<!-- Modals -->
+<delete-book-directive></delete-book-directive>
+<edit-book-directive></edit-book-directive>
+<new-book-directive></new-book-directive>
+
+<hr>
+
+
+
+<div class="row container-fluid">
+    <div class="col-md-1">
+        <h4>Search:</h4>
+    </div>
+    <form>
+        <div class="col-md-5">
+            <div class="form-group">
+                <input class="form-control" type="text"  placeholder="Search here .." ng-model="searchText.name" ng-trim="true">
+            </div>
+        </div>
+        <div class="col-md-1 btn_search">
+            <button type="button" class="btn btn-primary" ng-click="getAllBooks()" data-dismiss="modal">Search</button>
+        </div>
+    </form>
+    <div class="col-md-1 sort">
+        <h4>Sort:</h4>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <select class="form-control" ng-model="orderProp">
+                <option value="name">by name</option>
+                <option value="">by old for new</option>
+            </select>
+        </div>
+    </div>
+</div><br>
+
+<div class="alert alert-info" ng-show="books.length == 0">No Books found</div>
+
+<div class="row">
+    <div ng-repeat="book in searchedData | orderBy:orderProp">
+        <div class="col-md-3">
+            <div class="thumbnail">
+                <img src="/resources/img/default.jpg">
+                <div class="caption">
+                    <h3><a href="#/main/categories/{{categoryId}}/books/{{book.bookId}}">{{book.name}}</a></h3>
+                    <p>{{book.description}}</p>
+                    <p>
+                        <button class="btn btn-danger" ng-click="prepareForDelete(book.bookId)"  data-toggle="modal" data-target="#deleteModal">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                        <a type="button" class="btn btn-info" ng-click="getCurrentBook(book.bookId)" data-toggle="modal" data-target="#editModal">
+                            <i class="fa fa-pencil"></i>
+                            Edit
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-hide="searchedData">
+    <div ng-repeat="book in books | orderBy:orderProp">
+        <div class="col-md-3">
+            <div class="thumbnail">
+                <img src="/resources/img/default.jpg">
+                <div class="caption">
+                    <h3><a href="#/main/categories/{{categoryId}}/books/{{book.bookId}}">{{book.name}}</a></h3>
+                    <p>{{book.description}}</p>
+                    <p>
+                    <button class="btn btn-danger" ng-click="prepareForDelete(book.bookId)"  data-toggle="modal" data-target="#deleteModal">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                        <a type="button" class="btn btn-info" ng-click="getCurrentBook(book.bookId)" data-toggle="modal" data-target="#editModal">
+                            <i class="fa fa-pencil"></i>
+                            Edit
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<center><pagination ng-hide="searchedData" total-items="booksCount" ng-model="currentPage" items-per-page="maxSize" class="pagination-sm" boundary-links="true" ng-click="getBooksByCategoryAndPage(currentPage)"></pagination></center>

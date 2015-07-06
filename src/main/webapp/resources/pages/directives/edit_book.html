@@ -1,0 +1,50 @@
+<script src="/resources/js/diff_function.js"></script>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="editModalLabel">Edit Book</h4>
+            </div>
+            <form name="Add_form" class="form-horizontal" ng-submit="" novalidate>
+                <div class="modal-body">
+                    <div class="control-group">
+                        <label class="control-label" for="book_name">Book Name</label>
+
+                        <div class="controls">
+                            <input class="form-control" type="text" id="book_name" ng-model="currentBook.name"
+                                   placeholder="Please, type the book name" required>
+                        </div>
+                    </div>
+
+
+                    <div class="control-group">
+                        <label class="control-label" for="book_desc">Book Description</label>
+
+                        <div class="controls">
+                            <input class="form-control" type="text" id="book_desc" ng-model="currentBook.description"
+                                   placeholder="Please, type the book description" required>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="author_select1">Authors:</label>
+                        <div class="controls">
+                            <select id="author_select1" class="selectpicker" multiple>
+                                <option>Mustard</option>
+                                <option>Ketchup</option>
+                                <option>Relish</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="!currentBook.name || !currentBook.description" ng-click="editBook(currentBook, currentBook.bookId)" data-dismiss="modal">Edit Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
