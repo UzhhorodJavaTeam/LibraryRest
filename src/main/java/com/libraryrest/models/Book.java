@@ -1,13 +1,8 @@
 package com.libraryrest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.java.util.jar.pack.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +19,7 @@ public class Book implements Serializable {
     @Column(name = "bookId")
     Integer bookId;
 
-    @Column(name = "name")
+    @Column(name = "name",unique = true)
     String name;
 
     @Column(name = "description")
