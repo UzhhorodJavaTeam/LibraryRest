@@ -53,7 +53,7 @@
     <div ng-repeat="book in searchedData | orderBy:orderProp">
         <div class="col-md-3">
             <div class="thumbnail" style="">
-                <img src="{{book.images[0].url}}" style="height: 250px;">
+                <img src="{{book.images[0].url}}" style="height: 200px;">
 
                 <div class="caption">
                     <h3><a href="#/main/categories/{{categoryId}}/books/{{book.bookId}}">{{book.name}}</a></h3>
@@ -83,7 +83,7 @@
     <div ng-repeat="book in books | orderBy:orderProp">
         <div class="col-md-3">
             <div class="thumbnail">
-                <img src="{{book.images[0].url}}"style="height: 250px;" >
+                <img src="{{book.images[0].url}}"style="height: 200px;" >
 
                 <div class="caption">
                     <h3><a href="#/main/categories/{{categoryId}}/books/{{book.bookId}}">{{book.name}}</a></h3>
