@@ -3,8 +3,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="editModalLabel">Edit Book</h4>
             </div>
             <form name="Add_form" class="form-horizontal" ng-submit="" novalidate>
@@ -17,7 +16,6 @@
                             <p>Upload pdf:</p>
                             <input type="file" data-bind-file="" data-ng-model="thePdf" accept="application/pdf"/>
                         </div>
-<<<<<<< HEAD
                         <div class="col-lg-9">
                             <div class="control-group">
                                 <label class="control-label" for="book_name">Book Name</label>
@@ -38,60 +36,33 @@
                                 </div>
                             </div>
 
-                            <div class="control-group">
-                                <label class="control-label" for="author_select1">Authors:</label>
-                                <div class="controls">
-                                    <select id="author_select1" class="selectpicker" multiple>
-                                        <option>Mustard</option>
-                                        <option>Ketchup</option>
-                                        <option>Relish</option>
-                                    </select>
+                            <div class="row">
+                                <div class="control-group col-md-5" style="float: left">
+                                    <label class="control-label" for="dynamic-options">Authors:</label>
+
+                                    <div class="controls">
+                                        <ol id="dynamic-options" class="nya-bs-select" ng-model="newbook.authors"
+                                            title="Choose author..." multiple data-live-search="true" data-size="5">
+                                            <li nya-bs-option="author in authors">
+                                                <a>{{ author.firstName }}&nbsp;{{author.lastName}}
+                                                    <span class="glyphicon glyphicon-ok check-mark"></span></a>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="col-md-7" style="padding-top: 90px">
+                                    <a href="" data-toggle="modal" data-target="#addAuthor">No found the required author?
+                                        Add!</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-=======
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="book_desc">Book Description</label>
-
-                        <div class="controls">
-                             <textarea class="form-control" rows="2" id="book_desc" ng-model="currentBook.description"
-                                       placeholder="Please, type the book description" style="max-width: 100%" required></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="control-group col-md-5" style="float: left">
-                            <label class="control-label" for="dynamic-options">Authors:</label>
-
-                            <div class="controls">
-                                <ol id="dynamic-options" class="nya-bs-select"
-                                    ng-model="currentBook.authors" multiple data-live-search="true" data-size="5">
-                                    <li nya-bs-option="author in authors">
-                                        <a>{{ author.firstName }}&nbsp;{{author.lastName}}
-                                            <span class="glyphicon glyphicon-ok check-mark"></span></a>
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                        <div class="col-md-7" style="padding-top: 35px">
-                            <a href="" data-toggle="modal" data-target="#addAuthor">No found the required author?
-                                Add!</a>
-                        </div>
-                    </div>
-
->>>>>>> jatsko_working_branch
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary"
-                            ng-disabled="!currentBook.name || !currentBook.description"
-                            ng-click="editBook(currentBook, currentBook.bookId)" data-dismiss="modal">Edit Book
-                    </button>
+                    <button type="button" class="btn btn-primary" ng-disabled="!currentBook.name || !currentBook.description" ng-click="editBook(currentBook, currentBook.bookId)" data-dismiss="modal">Edit Book</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<add-author-directive></add-author-directive>

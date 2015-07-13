@@ -32,10 +32,7 @@ a:hover {
 
 .list-group-item .func_icon {
     display: inline;
-<<<<<<< HEAD
     padding-left: 2px;
-=======
->>>>>>> jatsko_working_branch
 }
 
 .list-group-item.active
