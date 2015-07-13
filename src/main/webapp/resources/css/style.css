@@ -31,7 +31,7 @@ a:hover{
 
 .list-group-item .func_icon{
     display: inline;
-    padding-left: 5px;
+    padding-left: 2px;
 }
 
 .list-group-item.active

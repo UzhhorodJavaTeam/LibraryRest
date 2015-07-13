@@ -28,6 +28,7 @@ public class Role implements Serializable {
     private UserRole roleName;
 
     public Role() {
+
     }
 
     public Role(UserRole roleName) {

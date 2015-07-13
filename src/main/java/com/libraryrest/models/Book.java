@@ -1,13 +1,8 @@
 package com.libraryrest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.java.util.jar.pack.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +33,12 @@ public class Book implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,CascadeType.PERSIST})
     @JoinTable(name = "catalog", joinColumns = @JoinColumn(name = "bookId"), inverseJoinColumns = @JoinColumn(name = "categoryId"))
     private BookCategory bookCategory;
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<Image> images = new ArrayList<Image>();
+
+    @Column(name = "pdfFileUrl")
+    private String pdfFileUrl;
 
     public Book() {
     }
@@ -88,7 +89,22 @@ public class Book implements Serializable {
     }
 
     public String toString() {
-        return "Name: " + name + " Description: " + description + " Authors: " + authors;
+        return "Name: " + name + " Description: " + description + " Authors: " + authors + "pdfUrl: " +pdfFileUrl;
     }
 
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
+    public String getPdfFileUrl() {
+        return pdfFileUrl;
+    }
+
+    public void setPdfFileUrl(String pdfFileUrl) {
+        this.pdfFileUrl = pdfFileUrl;
+    }
 }

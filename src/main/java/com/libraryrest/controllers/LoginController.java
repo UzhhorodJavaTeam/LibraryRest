@@ -2,6 +2,7 @@ package com.libraryrest.controllers;
 
 
 import com.libraryrest.DAO.RoleDao;
+import com.libraryrest.enums.UserRole;
 import com.libraryrest.enums.UserStatus;
 import com.libraryrest.models.Role;
 import org.apache.log4j.LogManager;
@@ -53,6 +54,17 @@ public class LoginController {
         logger.info("POST: /register");
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
         User newUser = user;
+        System.out.println(roleDao.findById(2L));
+        if(roleDao.findById(2L) == null){
+            System.out.println(1);
+            Role uRole = new Role(UserRole.ROLE_USER);
+            Role aRole = new Role(UserRole.ROLE_ADMIN);
+            System.out.println(2);
+            roleDao.saveOrUpdate(aRole);
+            roleDao.saveOrUpdate(uRole);
+            System.out.println(3);
+        }
+        System.out.println(4);
         Role userrole = roleDao.findById(2L);
         Set<Role> roles = new HashSet<Role>();
         roles.add(userrole);

@@ -1,13 +1,13 @@
 package com.libraryrest.DAOImpl;
 
 import com.libraryrest.DAO.UserDao;
+import com.libraryrest.models.User;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.libraryrest.models.User;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -63,12 +63,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public void remove(User user) {
-
+        sessionFactory.getCurrentSession().delete(user);
     }
 
     @Override
     @Transactional
     public void remove(Long id) {
-
+        User user = findById(id);
+        sessionFactory.getCurrentSession().delete(user);
     }
 }

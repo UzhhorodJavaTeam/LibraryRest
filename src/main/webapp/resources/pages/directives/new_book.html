@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addModalLabel">Add Book</h4>
             </div>
-            <form name="Add_form" class="form-horizontal" id="add_edit_form" novalidate>
+            <form name="Add_form" class="form-horizontal" enctype="multipart/form-data" id="add_edit_form" novalidate>
             <div class="modal-body">
                     <div class="control-group">
                         <label class="control-label" for="book_name">Book Name</label>
@@ -36,10 +36,11 @@
                     <div class="col-md-7" style="padding-top: 35px">
                         <a>No found the required author? Add!</a>
                     </div>
-                    <!--<div ng-repeat="author in authors">-->
-                        <!--<h1>{{author.firstName + '' + author.lastName}}</h1>-->
-                    <!--</div>-->
                 </div>
+                <p>Upload image:</p>
+                <input type="file" data-bind-file="" data-ng-model="theImage" accept="image/jpeg" />
+                <p>Upload pdf:</p>
+                <input type="file" data-bind-file="" data-ng-model="thePdf" accept="application/pdf" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

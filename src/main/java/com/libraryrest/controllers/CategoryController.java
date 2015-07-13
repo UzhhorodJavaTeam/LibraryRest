@@ -2,11 +2,11 @@ package com.libraryrest.controllers;
 
 import com.libraryrest.DAO.BookDAO;
 import com.libraryrest.DAO.CategoryDAO;
+import com.libraryrest.DAO.ImageDao;
 import com.libraryrest.DAO.UserDao;
 import com.libraryrest.exceptions.InvalidRequestException;
 import com.libraryrest.models.Book;
 import com.libraryrest.models.BookCategory;
-import com.libraryrest.models.User;
 import com.libraryrest.validators.BookValidator;
 import com.libraryrest.validators.CategoryValidator;
 import org.apache.log4j.LogManager;
@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 /**
  * Created by yura on 27.05.15.
  */
@@ -31,6 +30,9 @@ public class CategoryController {
 
     @Autowired
     BookDAO bookDAO;
+
+    @Autowired
+    ImageDao imageDao;
 
     @Autowired
     UserDao userDAO;
@@ -109,18 +111,19 @@ public class CategoryController {
 
 
     @RequestMapping(value = "/{categoryId}/books", method = RequestMethod.POST)
-    public Book postAddBookPage(@PathVariable("categoryId") Integer categoryId, @RequestBody Book book, BindingResult bindingResult) {
+    public Book postAddBookPage(@PathVariable("categoryId") Integer categoryId,
+                                @RequestBody Book book, BindingResult bindingResult) {
         logger.info("POST: categories/" + categoryId + "/books/add");
         bookValidator.validate(book, bindingResult);
         if (bindingResult.hasErrors()) {
             logger.error("POST: categories/" + categoryId + "/books/add " + bindingResult);
             throw new InvalidRequestException("Invalid book", bindingResult);
         }
+
         BookCategory bookCategory = categoryDAO.findById(categoryId);
         book.setBookCategory(bookCategory);
         Integer bookId = bookDAO.saveOrUpdate(book);
         book.setBookId(bookId);
-
 
         return book;
     }
@@ -143,19 +146,12 @@ public class CategoryController {
         return book;
     }
 
-
     @RequestMapping(value = "/{categoryId}/books/{bookId}", method = RequestMethod.GET)
     public Book getBookPage(@PathVariable("categoryId") Integer categoryId,@PathVariable("bookId") Integer bookId) {
         logger.info("GET: categories/"+ categoryId+"/books/" + bookId);
         Book book = bookDAO.findById(bookId);
         BookCategory category = categoryDAO.findById(categoryId);
-        if (!book.getBookCategory().equals(category)){
-            try {
-                throw new Exception();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+
         return book;
     }
 

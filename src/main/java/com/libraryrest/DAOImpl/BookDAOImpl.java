@@ -25,6 +25,7 @@ public class BookDAOImpl implements BookDAO {
 
 
     @Override
+    @Transactional
     public List<Book> getBooksByPage(Integer page) {
         count = 12;
         startAt =  (count * (page - 1));
@@ -113,6 +114,16 @@ public class BookDAOImpl implements BookDAO {
         sessionFactory.getCurrentSession().delete(book);
     }
 
+    @Override
+    @Transactional
+    public Book findByName(String name) {
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Book b WHERE b.name = :name");
+        query.setParameter("name", name);
+        query.setMaxResults(1);
 
+        @SuppressWarnings("unchecked")
+        Book book = (Book) query.uniqueResult();
 
+        return book;
+    }
 }

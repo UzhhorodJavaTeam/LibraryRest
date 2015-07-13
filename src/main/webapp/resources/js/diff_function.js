@@ -2,6 +2,6 @@
     $('.selectpicker').selectpicker();
 })();
 
-$('.modal').on('hidden.bs.modal', function() {
-    $(this).removeData('bs.modal');
-});
+//$('#addModal').on('hidden.bs.modal', function () {
+//    location.reload();
+//});

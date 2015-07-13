@@ -8,37 +8,46 @@
             </div>
             <form name="Add_form" class="form-horizontal" ng-submit="" novalidate>
                 <div class="modal-body">
-                    <div class="control-group">
-                        <label class="control-label" for="book_name">Book Name</label>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="{{currentBook.images[0].url}}" width="150px" height="150px" style="padding: 0px 10px 0px 0px">
+                            <p>Upload image:</p>
+                            <input type="file" data-bind-file="" data-ng-model="theImage" accept="image/jpeg" />
+                            <p>Upload pdf:</p>
+                            <input type="file" data-bind-file="" data-ng-model="thePdf" accept="application/pdf"/>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="control-group">
+                                <label class="control-label" for="book_name">Book Name</label>
 
-                        <div class="controls">
-                            <input class="form-control" type="text" id="book_name" ng-model="currentBook.name"
-                                   placeholder="Please, type the book name" required>
+                                <div class="controls">
+                                    <input class="form-control" type="text" id="book_name" ng-model="currentBook.name"
+                                           placeholder="Please, type the book name" required>
+                                </div>
+                            </div>
+
+
+                            <div class="control-group">
+                                <label class="control-label" for="book_desc">Book Description</label>
+
+                                <div class="controls">
+                                    <input class="form-control" type="text" id="book_desc" ng-model="currentBook.description"
+                                           placeholder="Please, type the book description" required>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label" for="author_select1">Authors:</label>
+                                <div class="controls">
+                                    <select id="author_select1" class="selectpicker" multiple>
+                                        <option>Mustard</option>
+                                        <option>Ketchup</option>
+                                        <option>Relish</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-
-                    <div class="control-group">
-                        <label class="control-label" for="book_desc">Book Description</label>
-
-                        <div class="controls">
-                            <input class="form-control" type="text" id="book_desc" ng-model="currentBook.description"
-                                   placeholder="Please, type the book description" required>
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label" for="author_select1">Authors:</label>
-                        <div class="controls">
-                            <select id="author_select1" class="selectpicker" multiple>
-                                <option>Mustard</option>
-                                <option>Ketchup</option>
-                                <option>Relish</option>
-                            </select>
-                        </div>
-                    </div>
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -1,6 +1,5 @@
 package com.libraryrest.DAO;
 
-import com.libraryrest.models.Author;
 import com.libraryrest.models.Book;
 
 import java.util.List;
@@ -13,6 +12,8 @@ public interface BookDAO {
     public List<Book> getAllBook();
 
     public Book findById(Integer bookId);
+
+    public Book findByName(String name);
 
     public Integer saveOrUpdate(Book book);
 

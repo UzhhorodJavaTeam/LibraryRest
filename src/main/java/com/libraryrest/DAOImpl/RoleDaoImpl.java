@@ -1,15 +1,14 @@
 package com.libraryrest.DAOImpl;
 
 import com.libraryrest.DAO.RoleDao;
-import com.libraryrest.models.Book;
+import com.libraryrest.exceptions.DaoSystemException;
+import com.libraryrest.exceptions.NoSuchEntityException;
+import com.libraryrest.models.Role;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.libraryrest.exceptions.DaoSystemException;
-import com.libraryrest.exceptions.NoSuchEntityException;
-import com.libraryrest.models.Role;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
+    @Transactional
     public List<Role> findAll() throws DaoSystemException  {
         List<Role> categoryList = new ArrayList<Role>();
 
@@ -58,17 +58,21 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
+    @Transactional
     public void saveOrUpdate(Role role) {
-
+        sessionFactory.getCurrentSession().saveOrUpdate(role);
     }
 
     @Override
+    @Transactional
     public void remove(Role role) {
-
+        sessionFactory.getCurrentSession().delete(role);
     }
 
     @Override
+    @Transactional
     public void remove(Long id) throws DaoSystemException, NoSuchEntityException {
-
+        Role role = findById(id);
+        sessionFactory.getCurrentSession().delete(role);
     }
 }
