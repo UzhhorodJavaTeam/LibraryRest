@@ -6,22 +6,48 @@
                 <h4 class="modal-title">Add Author</h4>
             </div>
             <div class="modal-body">
-                <div class="control-group">
-                    <label class="control-label" for="first_name">First name </label>
+                <form name="add_author" novalidate>
+                    <div ng-class="{'has-error':add_author.first_name.$invalid && (add_author.first_name.$dirty)}">
+                        <div class="control-group">
+                            <label class="control-label" for="first_name">First name </label>
 
-                    <div class="controls">
-                        <input class="form-control" type="text" id="first_name" ng-model="author.firstName"
-                               placeholder="Please, type the first name" required>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="last_name">Last name </label>
+                            <div class="controls">
+                                <input class="form-control" type="text" id="first_name" ng-model="author.firstName"
+                                       name="first_name" ng-minlength="3" ng-maxlength="20"
+                                       placeholder="Please, type the first name" required>
 
-                    <div class="controls">
-                        <input class="form-control" type="text" id="last_name" ng-model="author.lastName"
-                               placeholder="Please, type the last name" required>
+                                <p ng-show="add_author.first_name.$error.required && (add_author.first_name.$dirty)"
+                                   class="help-block">First name is required.</p>
+
+                                <p ng-show="add_author.first_name.$error.minlength"
+                                   class="help-block">First name is required to be at least 3 characters.</p>
+
+                                <p ng-show="add_author.first_name.$error.maxlength"
+                                   class="help-block">First name cannot be longer than 20 characters.</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <div ng-class="{'has-error':add_author.last_name.$invalid && (add_author.last_name.$dirty)}">
+                        <div class="control-group">
+                            <label class="control-label" for="last_name">Last name </label>
+
+                            <div class="controls">
+                                <input class="form-control" type="text" id="last_name" ng-model="author.lastName"
+                                       name="last_name" ng-minlength="3" ng-maxlength="20"
+                                       placeholder="Please, type the last name" required>
+
+                                <p ng-show="add_author.last_name.$error.required && (add_author.first_name.$dirty)"
+                                   class="help-block">Last name is required.</p>
+
+                                <p ng-show="add_author.last_name.$error.minlength"
+                                   class="help-block">Last name is required to be at least 3 characters.</p>
+
+                                <p ng-show="add_author.last_name.$error.maxlength"
+                                   class="help-block">Last name cannot be longer than 20 characters.</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="resetAuthorField()">Close
