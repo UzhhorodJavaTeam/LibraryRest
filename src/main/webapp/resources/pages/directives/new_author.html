@@ -1,0 +1,35 @@
+<div id="addAuthor" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width: 300px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                <h4 class="modal-title">Add Author</h4>
+            </div>
+            <div class="modal-body">
+                <div class="control-group">
+                    <label class="control-label" for="first_name">First name </label>
+
+                    <div class="controls">
+                        <input class="form-control" type="text" id="first_name" ng-model="author.firstName"
+                               placeholder="Please, type the first name" required>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="last_name">Last name </label>
+
+                    <div class="controls">
+                        <input class="form-control" type="text" id="last_name" ng-model="author.lastName"
+                               placeholder="Please, type the last name" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="resetAuthorField()">Close
+                </button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        ng-disabled="!author.firstName || !author.lastName" ng-click="addAuthor(author)">Add Author
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

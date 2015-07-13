@@ -1,7 +1,5 @@
 package com.libraryrest.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ public class BookCategory implements Serializable {
     @GeneratedValue
     private Integer categoryId;
 
-    @Column(name = "categoryTitle")
+    @Column(name = "categoryTitle" ,unique = true)
     private String categoryTitle;
 
     @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER,cascade = {CascadeType.REFRESH,CascadeType.PERSIST, CascadeType.REMOVE})

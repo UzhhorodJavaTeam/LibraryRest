@@ -1,9 +1,10 @@
 <script src="/resources/js/diff_function.js"></script>
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+<div id="addModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addModalLabel">Add Book</h4>
             </div>
             <form name="Add_form" class="form-horizontal" enctype="multipart/form-data" id="add_edit_form" novalidate>
@@ -20,19 +21,30 @@
                         <label class="control-label" for="book_desc">Book Description</label>
 
                         <div class="controls">
-                            <input class="form-control" type="text" id="book_desc" ng-model="newbook.description"
-                                   placeholder="Please, type the book description" required>
+                            <textarea class="form-control" rows="2" id="book_desc" ng-model="newbook.description"
+                                      placeholder="Please, type the book description" style="max-width: 100%" required></textarea>
                         </div>
                     </div>
-                <div class="row">
-                    <div class="control-group col-md-5" style="float: left">
-                        <label class="control-label" for="author_select">Authors:</label>
-                        <div class="controls">
-                            <select id="author_select" class="selectpicker" multiple>
-                                    <option ng-repeat="author in authors" value="{{author.authorId}}">{{author.firstName + ' ' + author.lastName}}</option>
-                            </select>
+                    <div class="row">
+                        <div class="control-group col-md-5" style="float: left">
+                            <label class="control-label" for="dynamic-options">Authors:</label>
+
+                            <div class="controls">
+                                <ol id="dynamic-options" class="nya-bs-select" ng-model="newbook.authors"
+                                    title="Choose author..." multiple data-live-search="true" data-size="5">
+                                    <li nya-bs-option="author in authors">
+                                        <a>{{ author.firstName }}&nbsp;{{author.lastName}}
+                                            <span class="glyphicon glyphicon-ok check-mark"></span></a>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="col-md-7" style="padding-top: 35px">
+                            <a href="" data-toggle="modal" data-target="#addAuthor">No found the required author?
+                                Add!</a>
                         </div>
                     </div>
+<<<<<<< HEAD
                     <div class="col-md-7" style="padding-top: 35px">
                         <a>No found the required author? Add!</a>
                     </div>
@@ -46,7 +58,17 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" ng-disabled="!newbook.name || !newbook.description" ng-click="addBook(newbook)" data-dismiss="modal">Add Book</button>
             </div>
+=======
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-disabled="!newbook.name || !newbook.description"
+                            ng-click="addBook(newbook)" data-dismiss="modal">Add Book
+                    </button>
+                </div>
+>>>>>>> jatsko_working_branch
             </form>
         </div>
     </div>
 </div>
+

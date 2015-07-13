@@ -1,7 +1,6 @@
 package com.libraryrest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,14 +15,14 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer authorId;
 
-    @Column(name = "firstName")
+    @Column(name = "firstName", unique = true)
     private String firstName;
 
-    @Column(name = "lastName")
+    @Column(name = "lastName", unique = true)
     private String lastName;
 
     @JsonIgnore
-    @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.PERSIST}, mappedBy = "authors", fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST}, mappedBy = "authors", fetch = FetchType.EAGER)
     private List<Book> books = new ArrayList<Book>();
 
     public Author() {
@@ -69,6 +68,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Name: " + firstName + " " + lastName;
+        return "FirstName: " + firstName + ";" + "LastName: " + lastName;
     }
 }

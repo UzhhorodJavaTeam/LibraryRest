@@ -1,41 +1,45 @@
-.sidebar{
+.sidebar {
     margin-left: 5%;
 }
 
-.modal-content .form-control.ng-invalid.ng-dirty{
+.modal-content .form-control.ng-invalid.ng-dirty {
     border-color: red;
     outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 6, 0, 0.60);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(255, 6, 0, 0.60);
-}
-.modal-content .form-control.ng-valid.ng-dirty{
-    border-color: green;
-    outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(31, 165, 0, 0.60);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(31, 165, 0, 0.60);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(255, 6, 0, 0.60);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(255, 6, 0, 0.60);
 }
 
-.search .label.form-control{
+.modal-content .form-control.ng-valid.ng-dirty {
+    border-color: green;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(31, 165, 0, 0.60);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(31, 165, 0, 0.60);
+}
+
+.search .label.form-control {
     display: inline;
 }
 
-#plus_category i{
+#plus_category i {
     padding-top: 4px;
     float: right;
 }
 
 .list-group-item.active
-a:hover{
+a:hover {
     color: #cccccc;
 }
 
-.list-group-item .func_icon{
+.list-group-item .func_icon {
     display: inline;
+<<<<<<< HEAD
     padding-left: 2px;
+=======
+>>>>>>> jatsko_working_branch
 }
 
 .list-group-item.active
-a{
+a {
     color: #ffffff;
 }
 
@@ -43,6 +47,14 @@ a{
     margin-left: -20px;
 }
 
-.sort h4{
+.sort h4 {
     margin-left: 10px;
+}
+
+#addAuthor {
+    left: 70%;
+}
+
+#addAuthorToBook {
+    left: 70%;
 }

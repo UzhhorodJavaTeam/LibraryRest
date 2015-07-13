@@ -1,12 +1,18 @@
 package com.libraryrest.controllers;
 
+import com.libraryrest.DAO.AuthorDAO;
 import com.libraryrest.DAO.BookDAO;
 import com.libraryrest.DAO.CategoryDAO;
 import com.libraryrest.DAO.ImageDao;
 import com.libraryrest.DAO.UserDao;
 import com.libraryrest.exceptions.InvalidRequestException;
+import com.libraryrest.models.Author;
 import com.libraryrest.models.Book;
 import com.libraryrest.models.BookCategory;
+<<<<<<< HEAD
+=======
+import com.libraryrest.validators.AuthorValidator;
+>>>>>>> jatsko_working_branch
 import com.libraryrest.validators.BookValidator;
 import com.libraryrest.validators.CategoryValidator;
 import org.apache.log4j.LogManager;
@@ -38,10 +44,16 @@ public class CategoryController {
     UserDao userDAO;
 
     @Autowired
+    AuthorDAO authorDAO;
+
+    @Autowired
     CategoryValidator categoryValidator;
 
     @Autowired
     BookValidator bookValidator;
+
+    @Autowired
+    AuthorValidator authorValidator;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<BookCategory> getCategories() {
@@ -93,7 +105,7 @@ public class CategoryController {
     @RequestMapping(value = "/{categoryId}/books/page={pageNum}", method = RequestMethod.GET)
     public List<Book> getBooksByCategoryIdAndPage(@PathVariable("categoryId") Integer categoryId,
                                                   @PathVariable("pageNum") Integer page) {
-        logger.info("GET: categories/"+ categoryId +"/books/page=" + page);
+        logger.info("GET: categories/" + categoryId + "/books/page=" + page);
 
         List<Book> books = bookDAO.getBooksByCategoryAndPage(categoryId, page);
 
@@ -102,7 +114,7 @@ public class CategoryController {
 
     @RequestMapping(value = "/{categoryId}/books", method = RequestMethod.GET)
     public List<Book> getBooksByCategoryId(@PathVariable("categoryId") Integer categoryId) {
-        logger.info("GET: categories/"+ categoryId +"/books");
+        logger.info("GET: categories/" + categoryId + "/books");
 
         List<Book> books = bookDAO.findByCategoryId(categoryId);
 
@@ -128,6 +140,18 @@ public class CategoryController {
         return book;
     }
 
+    @RequestMapping(value = "/{categoryId}/books/authors", method = RequestMethod.POST)
+    public Author postAddAuthor(@PathVariable("categoryId") Integer categoryId, @RequestBody Author author, BindingResult bindingResult) {
+        logger.info("GET: categories/" + categoryId + "/books/" + "/authors/add");
+        authorValidator.validate(author, bindingResult);
+        if (bindingResult.hasErrors()) {
+            logger.error("POST: /categories/" + categoryId + "/books/" + "/authors" + bindingResult);
+            throw new InvalidRequestException("Invalid author", bindingResult);
+        }
+        categoryDAO.findById(categoryId);
+        authorDAO.saveOrUpdate(author);
+        return authorDAO.findById(author.getAuthorId());
+    }
 
     @RequestMapping(value = "/{categoryId}/books/{bookId}", method = RequestMethod.PUT)
     public Book postEditBookPage(@PathVariable("categoryId") Integer categoryId, @PathVariable("bookId") Integer bookId, @RequestBody Book book, BindingResult bindingResult) {
@@ -147,18 +171,28 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/{categoryId}/books/{bookId}", method = RequestMethod.GET)
-    public Book getBookPage(@PathVariable("categoryId") Integer categoryId,@PathVariable("bookId") Integer bookId) {
-        logger.info("GET: categories/"+ categoryId+"/books/" + bookId);
+    public Book getBookPage(@PathVariable("categoryId") Integer categoryId, @PathVariable("bookId") Integer bookId) {
+        logger.info("GET: categories/" + categoryId + "/books/" + bookId);
         Book book = bookDAO.findById(bookId);
         BookCategory category = categoryDAO.findById(categoryId);
+<<<<<<< HEAD
 
+=======
+        if (!book.getBookCategory().equals(category)) {
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+>>>>>>> jatsko_working_branch
         return book;
     }
 
 
     @RequestMapping(value = "/{categoryId}/books/{bookId}", method = RequestMethod.DELETE)
-    public String getDeleteCurrentCategory(@PathVariable("categoryId") Integer categoryId ,@PathVariable("bookId") Integer bookId) {
-        logger.info("DELETE: categories/"+ categoryId +"/books/" + bookId + "/delete");
+    public String getDeleteCurrentCategory(@PathVariable("categoryId") Integer categoryId, @PathVariable("bookId") Integer bookId) {
+        logger.info("DELETE: categories/" + categoryId + "/books/" + bookId + "/delete");
         bookDAO.deleteBook(bookId);
 
         return "Deleted Successfully";

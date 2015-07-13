@@ -19,7 +19,7 @@ public class Book implements Serializable {
     @Column(name = "bookId")
     Integer bookId;
 
-    @Column(name = "name")
+    @Column(name = "name",unique = true)
     String name;
 
     @Column(name = "description")
