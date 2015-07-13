@@ -7,9 +7,6 @@ import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
 
-/**
- * @author Vladimir Martynyuk
- */
 public interface RoleDao {
 
     public List<Role> findAll()  throws DaoSystemException;

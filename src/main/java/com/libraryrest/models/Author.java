@@ -1,7 +1,6 @@
 package com.libraryrest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,6 +24,11 @@ public class Author {
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.PERSIST}, mappedBy = "authors", fetch = FetchType.EAGER)
     private List<Book> books = new ArrayList<Book>();
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "userId", nullable = false)
+    private User user;
 
     public Author() {
     }
@@ -66,6 +70,13 @@ public class Author {
         this.firstName = firstName;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public String toString() {

@@ -5,9 +5,6 @@ import com.libraryrest.models.User;
 
 import java.util.List;
 
-/**
- * @author Vladimir Martynyuk
- */
 public interface UserDao {
 
     public List<User> findAll();

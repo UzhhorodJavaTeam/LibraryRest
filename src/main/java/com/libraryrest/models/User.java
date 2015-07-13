@@ -1,12 +1,11 @@
 package com.libraryrest.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.libraryrest.enums.UserStatus;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.libraryrest.enums.UserStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -44,6 +43,16 @@ public class User implements UserDetails, Serializable {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @OneToMany(mappedBy = "user")
+    @Fetch(FetchMode.JOIN)
+    private Set<BookCategory> categories = new HashSet<BookCategory>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Book> books = new HashSet<Book>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Author> authors = new HashSet<Author>();
 
     public Long getId() {
         return id;
@@ -90,7 +99,7 @@ public class User implements UserDetails, Serializable {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-//
+    //
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> result = new ArrayList<SimpleGrantedAuthority>();
@@ -148,4 +157,19 @@ public class User implements UserDetails, Serializable {
         this.status = status;
     }
 
+    public Set<BookCategory> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<BookCategory> categories) {
+        this.categories = categories;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
 }

@@ -32,8 +32,6 @@ public class FileController {
     @RequestMapping(value = "/uploadImage", method = RequestMethod.POST)
     public void uploadImageHandler(@RequestParam("image") MultipartFile file,
                                     @RequestParam("bookName") String bookName) {
-        System.out.println(bookName);
-        System.out.println(file.getOriginalFilename());
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
@@ -46,7 +44,7 @@ public class FileController {
                     dir.mkdirs();
                 }
                 Image image = new Image();
-                String fileName = image.hashCode() + file.getOriginalFilename();
+                String fileName = image.hashCode() + ((int) Math.random()*9999) + ".jpeg";
                 // Create the file on server
                 File serverFile = new File(dir.getAbsolutePath()
                         + File.separator + fileName);
@@ -68,8 +66,6 @@ public class FileController {
     @RequestMapping(value = "/uploadPdf", method = RequestMethod.POST)
     public void uploadPdfHandler(@RequestParam("pdf") MultipartFile file,
                                    @RequestParam("bookName") String bookName) {
-        System.out.println(bookName);
-        System.out.println(file.getOriginalFilename());
         if (!file.isEmpty()) {
             try {
                 byte[] bytes = file.getBytes();
@@ -91,9 +87,7 @@ public class FileController {
                         new FileOutputStream(serverFile));
                 stream.write(bytes);
                 stream.close();
-                System.out.println(pathForDatabase + fileName);
                 book.setPdfFileUrl(pathForDatabase + fileName);
-                System.out.println(book.getPdfFileUrl());
                 bookDAO.update(book);
 
             } catch (Exception e) {
