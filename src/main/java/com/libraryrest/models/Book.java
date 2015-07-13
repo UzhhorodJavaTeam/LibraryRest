@@ -37,6 +37,12 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<Image>();
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "userId", nullable = false)
+    private User user;
+
+
     @Column(name = "pdfFileUrl")
     private String pdfFileUrl;
 
@@ -88,10 +94,6 @@ public class Book implements Serializable {
         this.bookCategory = bookCategory;
     }
 
-    public String toString() {
-        return "Name: " + name + " Description: " + description + " Authors: " + authors + "pdfUrl: " +pdfFileUrl;
-    }
-
     public List<Image> getImages() {
         return images;
     }
@@ -106,5 +108,18 @@ public class Book implements Serializable {
 
     public void setPdfFileUrl(String pdfFileUrl) {
         this.pdfFileUrl = pdfFileUrl;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + " Description: " + description + " Authors: " + authors + "pdfUrl: " +pdfFileUrl;
     }
 }

@@ -217,7 +217,7 @@
                             $scope.getAllCategories();
                         })
                         .error(function (data) {
-                            toastr.error(data);
+                            toastr.error('Add Failed');
                         })
                 }
             }
@@ -285,14 +285,17 @@
         });
     }]);
 
-    app.controller('UserController', ['$scope', '$http', function ($scope, $http) {
+
+    app.controller('UserController',['$scope','$http', '$location', function($scope, $http, $location) {
+
         $scope.newuser = {};
 
         $scope.register = function (user) {
             $http.post('/register', user)
 
-                .success(function (data) {
-                    toastr.success(data);
+                .success(function () {
+                    toastr.success('Successfully registered');
+                    $location.url('/');
                 })
                 .error(function () {
                     toastr.error("Register Failed");

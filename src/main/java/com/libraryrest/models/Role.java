@@ -7,10 +7,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Vladimir Martynyuk
- */
-
 @Entity
 @Table(name = "role")
 public class Role implements Serializable {

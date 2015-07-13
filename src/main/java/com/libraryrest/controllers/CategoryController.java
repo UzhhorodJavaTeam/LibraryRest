@@ -4,11 +4,14 @@ import com.libraryrest.DAO.*;
 import com.libraryrest.exceptions.InvalidRequestException;
 import com.libraryrest.models.Book;
 import com.libraryrest.models.BookCategory;
+import com.libraryrest.models.User;
 import com.libraryrest.validators.BookValidator;
 import com.libraryrest.validators.CategoryValidator;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +64,10 @@ public class CategoryController {
             logger.error("POST: /categories/add" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
+        User currentUser = getCurrentUser();
+
+        category.setUser(currentUser);
+        System.out.println(currentUser);
         Integer categoryId = categoryDAO.saveOrUpdate(category);
         category.setCategoryId(categoryId);
         return category;
@@ -74,6 +81,9 @@ public class CategoryController {
             logger.error("PUT: /categories/" + category + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
+        User currentUser = getCurrentUser();
+        bookCategory.setUser(currentUser);
+
         bookCategory.setCategoryId(category);
         categoryDAO.update(bookCategory);
         return bookCategory;
@@ -117,6 +127,9 @@ public class CategoryController {
             logger.error("POST: categories/" + categoryId + "/books/add " + bindingResult);
             throw new InvalidRequestException("Invalid book", bindingResult);
         }
+        User currentUser = getCurrentUser();
+
+        book.setUser(currentUser);
 
         BookCategory bookCategory = categoryDAO.findById(categoryId);
         book.setBookCategory(bookCategory);
@@ -135,6 +148,9 @@ public class CategoryController {
             logger.error("POST: categories/" + categoryId + "/books/" + bookId + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid book", bindingResult);
         }
+        User currentUser = getCurrentUser();
+        book.setUser(currentUser);
+
         book.setBookCategory(categoryDAO.findById(categoryId));
         book.setBookId(bookId);
 
@@ -160,5 +176,11 @@ public class CategoryController {
         return "Deleted Successfully";
     }
 
+    public User getCurrentUser() {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        return userDAO.findByName(username);
+    }
 }
