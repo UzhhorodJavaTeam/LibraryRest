@@ -3,64 +3,98 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="editModalLabel">Edit Book</h4>
             </div>
-            <form name="Add_form" class="form-horizontal" ng-submit="" novalidate>
+            <form name="edit_form" class="form-horizontal" ng-submit="" novalidate>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <img src="{{currentBook.images[0].url}}" width="150px" height="150px" style="padding: 0px 10px 0px 0px">
-                            <p>Upload image:</p>
-                            <input type="file" data-bind-file="" data-ng-model="theImage" accept="image/jpeg" />
+                            <img src="{{currentBook.images[0].url}}" width="150px" height="150px"
+                                 style="padding: 0px 10px 0px 0px">
+
+                            <p style="margin-top: 25px;">Upload image:</p>
+                            <input type="file" data-bind-file="" data-ng-model="theImage" accept="image/jpeg"/>
+
                             <p>Upload pdf:</p>
                             <input type="file" data-bind-file="" data-ng-model="thePdf" accept="application/pdf"/>
                         </div>
                         <div class="col-lg-9">
-                            <div class="control-group">
-                                <label class="control-label" for="book_name">Book Name</label>
-
-                                <div class="controls">
-                                    <input class="form-control" type="text" id="book_name" ng-model="currentBook.name"
-                                           placeholder="Please, type the book name" required>
-                                </div>
-                            </div>
-
-
-                            <div class="control-group">
-                                <label class="control-label" for="book_desc">Book Description</label>
-
-                                <div class="controls">
-                                    <input class="form-control" type="text" id="book_desc" ng-model="currentBook.description"
-                                           placeholder="Please, type the book description" required>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="control-group col-md-5" style="float: left">
-                                    <label class="control-label" for="dynamic-options">Authors:</label>
+                            <div ng-class="{'has-error':edit_form.book_name.$invalid && (edit_form.book_name.$dirty)}">
+                                <div class="control-group">
+                                    <label class="control-label" for="book_name">Book Name</label>
 
                                     <div class="controls">
-                                        <ol id="dynamic-options" class="nya-bs-select" ng-model="newbook.authors"
-                                            title="Choose author..." multiple data-live-search="true" data-size="5">
-                                            <li nya-bs-option="author in authors">
-                                                <a>{{ author.firstName }}&nbsp;{{author.lastName}}
-                                                    <span class="glyphicon glyphicon-ok check-mark"></span></a>
-                                            </li>
-                                        </ol>
+                                        <input class="form-control" type="text" id="book_name"
+                                               ng-model="currentBook.name"
+                                               name="book_name" ng-minlength="3" ng-maxlength="20"
+                                               placeholder="Please, type the book name" required>
+
+                                        <div style="position: absolute">
+                                        <span style="margin-bottom:0" ng-show="edit_form.book_name.$error.required && (edit_form.book_name.$dirty)"
+                                              class="help-block">Book name is required.</span>
+
+                                        <span style="margin-bottom:0" ng-show="edit_form.book_name.$error.minlength"
+                                              class="help-block">Book name is required to be at least 3 characters.</span>
+
+                                        <span style="margin-bottom:0" ng-show="edit_form.book_name.$error.maxlength"
+                                              class="help-block">Book name cannot be longer than 20 characters.</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-7" style="padding-top: 90px">
-                                    <a href="" data-toggle="modal" data-target="#addAuthor">No found the required author?
-                                        Add!</a>
+                            </div>
+
+                            <div ng-class="{'has-error':edit_form.book_description.$invalid && (edit_form.book_description.$dirty)}">
+                                <div class="control-group">
+                                    <label class="control-label" for="book_desc" style="margin-top: 15px">Book Description</label>
+
+                                    <div class="controls">
+                             <textarea class="form-control" rows="2" id="book_desc" ng-model="currentBook.description"
+                                       name="book_description" ng-minlength="20" ng-maxlength="200"
+                                       placeholder="Please, type the book description" style="max-width: 100%"
+                                       required></textarea>
+
+                                        <div style="position:absolute;">
+                                        <span ng-show="edit_form.book_description.$error.required && (edit_form.book_description.$dirty)"
+                                              class="help-block">Book description is required.</span>
+
+                                        <span ng-show="edit_form.book_description.$error.minlength"
+                                              class="help-block">Book description is required to be at least 20
+                                            characters.</span>
+
+                                        <span ng-show="edit_form.book_description.$error.maxlength"
+                                              class="help-block">Book description cannot be longer than 200 characters.</span>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+
+
+                            <div class="control-group col-md-10" style="margin-left: 125px; float: left;margin-top: 30px">
+                                <label class="control-label" for="dynamic-options">Authors:</label>
+
+                                <div class="controls">
+                                    <ol id="dynamic-options" class="nya-bs-select" ng-model="currentBook.authors"
+                                        title="Choose author..." multiple data-live-search="true" data-size="5">
+                                        <li nya-bs-option="author in authors">
+                                            <a>{{ author.firstName }}&nbsp;{{author.lastName}}
+                                                <span class="glyphicon glyphicon-ok check-mark"></span></a>
+                                        </li>
+                                    </ol>
+                                </div>
+                                <a href="" data-toggle="modal" data-target="#addAuthor">No found the required
+                                    author? Add!</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" ng-disabled="!currentBook.name || !currentBook.description" ng-click="editBook(currentBook, currentBook.bookId)" data-dismiss="modal">Edit Book</button>
+                    <button type="button" class="btn btn-primary"
+                            ng-disabled="!currentBook.name || !currentBook.description"
+                            ng-click="editBook(currentBook, currentBook.bookId)" data-dismiss="modal">Edit Book
+                    </button>
                 </div>
             </form>
         </div>
