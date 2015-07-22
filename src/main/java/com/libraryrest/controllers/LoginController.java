@@ -1,12 +1,17 @@
 package com.libraryrest.controllers;
 
 
+import com.libraryrest.DAO.BookDAO;
 import com.libraryrest.DAO.RoleDao;
 import com.libraryrest.DAO.UserDao;
+import com.libraryrest.DAO.VoteDao;
+
 import com.libraryrest.enums.UserRole;
 import com.libraryrest.enums.UserStatus;
+import com.libraryrest.models.Book;
 import com.libraryrest.models.Role;
 import com.libraryrest.models.User;
+import com.libraryrest.models.Vote;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -30,6 +36,12 @@ public class LoginController {
 
     @Autowired
     RoleDao roleDao;
+
+    @Autowired
+    BookDAO bookDAO;
+
+    @Autowired
+    VoteDao voteDao;
 
     @Autowired
     @Qualifier("registrationFormValidator")
@@ -51,6 +63,7 @@ public class LoginController {
             roleDao.saveOrUpdate(aRole);
             roleDao.saveOrUpdate(uRole);
         }
+
         Role userrole = roleDao.findById(2L);
         Set<Role> roles = new HashSet<Role>();
         roles.add(userrole);
@@ -58,6 +71,11 @@ public class LoginController {
         newUser.setStatus(UserStatus.ACTIVE);
         newUser.setRoles(roles);
         userDao.save(newUser);
+        List<Book> books = bookDAO.getAllBook();
+        for (Book book : books) {
+            Vote vote = new Vote(null,book,newUser);
+            voteDao.saveOrUpdate(vote);
+        }
         return "Register successfully";
     }
 

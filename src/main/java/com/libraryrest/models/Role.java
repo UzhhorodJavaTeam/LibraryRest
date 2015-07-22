@@ -18,7 +18,7 @@ public class Role implements Serializable {
     private Long id;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<User> users = new HashSet<User>();
 
     @Enumerated(EnumType.STRING)

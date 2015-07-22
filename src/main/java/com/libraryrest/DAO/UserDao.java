@@ -9,11 +9,11 @@ public interface UserDao {
 
     public List<User> findAll();
 
-    public User findById(Long id);
+    public User findById(Integer id);
 
     public User findByName(String login);
 
-    public void save(User user);
+    public Integer save(User user);
 
     public void update(User user);
 
@@ -21,5 +21,5 @@ public interface UserDao {
     public void remove(User user);
 
     @Secured({"ROLE_ADMIN"})
-    public void remove(Long id);
+    public void remove(Integer id);
 }

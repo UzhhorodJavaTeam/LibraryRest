@@ -22,9 +22,8 @@
     var app = angular.module('app', ['ngRoute', 'ui.bootstrap', 'nya.bootstrap.select']);
 
 // configure our routes
-    app.config(function ($routeProvider) {
+    app.config(["$routeProvider", function ($routeProvider) {
         $routeProvider
-
             .when('/main/categories/:categoryId/books', {
                 templateUrl: '/resources/pages/books/books_list.html',
                 controller: 'BooksController'
@@ -67,7 +66,7 @@
 
 
         $routeProvider.otherwise({redirectTo: '/'});
-    });
+    }]);
 
     app.directive('categorySidebar', function () {
         return {
@@ -344,8 +343,8 @@
         return myService;
     });
 
+
     app.controller('UserController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
-        $scope.userLogin = '';
         $scope.newuser = {};
 
         $scope.register = function (user) {
@@ -393,16 +392,81 @@
         };
     }]);
 
-    app.controller('BooksController', ['filterFilter', '$scope', '$routeParams', '$http', '$window', function (filterFilter, $scope, $routeParams, $http, $window) {
+    app.directive("starRating", function () {
+        return {
+            restrict: "EA",
+            template: "<ul class='rating' ng-class='{readonly: readonly}'>" +
+            "  <li ng-repeat='star in stars' ng-class='star' ng-click='toggle($index)'>" +
+            "    <i class='fa fa-star'></i>" + //&#9733
+            "  </li>" +
+            "</ul>",
+            scope: {
+                ratingValue: "=ngModel",
+                max: "=?", //optional: default is 5
+                onRatingSelected: "&?",
+                readonly: "=?"
+            },
+            link: function (scope, elem, attrs) {
+                if (scope.max == undefined) {
+                    scope.max = 5;
+                }
+                function updateStars() {
+                    scope.stars = [];
+                    for (var i = 0; i < scope.max; i++) {
+                        scope.stars.push({
+                            filled: i < scope.ratingValue
+                        });
+                    }
+                };
+                scope.toggle = function (index) {
+                    if (scope.readonly == undefined || scope.readonly == false) {
+                        scope.ratingValue = index + 1;
+                        scope.onRatingSelected({
+                            rating: index + 1
+                        });
+                    }
+                };
+                scope.$watch("ratingValue", function (oldVal, newVal) {
+                    if (newVal) {
+                        updateStars();
+                    }
+                });
+            }
+        };
+    });
+
+    app.controller('BooksController', ['filterFilter', '$scope', '$routeParams', '$http', '$window', '$filter', function (filterFilter, $scope, $routeParams, $http, $window, $filter) {
         $scope.categoryId = $routeParams.categoryId;
         $scope.bookId = $routeParams.bookId;
         $scope.newbook = {};
         $scope.maxSize = 12;
         $scope.currentPage = 1;
         $scope.searchText = '';
-
+        $scope.rating = 1;
+        $scope.isReadonly = true;
         $scope.theImage = null;
         $scope.thePdf = null;
+
+        $scope.refreshData = function (value, bookId, id) {
+            var fd = new FormData();
+            fd.append("value", value);
+            fd.append("bookId", bookId);
+            fd.append("userId", id);
+            $http({
+                method: 'POST',
+                url: '/votes',
+                headers: {'Content-Type': undefined},
+                data: fd,
+                transformRequest: angular.identity
+            })
+                .success(function (data) {
+                    $scope.getBooksByCategoryAndPage($scope.currentPage);
+                    toastr.success("Vote recorded")
+                })
+                .error(function (data) {
+                    toastr.error(data)
+                });
+        };
 
         $scope.resetPdf = function () {
             $scope.thePdf = null;
@@ -520,5 +584,7 @@
         });
         $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
     }
+
+
 })
-();
+()
