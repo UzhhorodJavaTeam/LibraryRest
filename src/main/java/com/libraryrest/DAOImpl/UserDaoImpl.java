@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public List<User> findAll() {
-        return null;
+        return sessionFactory.getCurrentSession().createQuery("from User").list();
     }
 
     @Override

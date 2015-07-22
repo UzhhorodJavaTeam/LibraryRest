@@ -5,7 +5,8 @@
         <h3>{{"Found books: " +booksCount}}</h3>
     </div>
     <div class="col-lg-8" style="float: right">
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addModal">
+        <button ng-show="accessCreateBook" type="button" class="btn btn-success" data-toggle="modal"
+                data-target="#addModal">
             <i class="fa fa-plus"></i>
             Add Book
         </button>
@@ -54,6 +55,7 @@
         <div class="col-md-3">
             <div class="thumbnail" style="">
                 <img src="{{book.images[0].url}}" style="height: 200px;">
+
                 <div class="caption">
                     <h3><a href="#/main/categories/{{categoryId}}/books/{{book.bookId}}">{{book.name}}</a></h3>
 
@@ -62,11 +64,13 @@
                     </div>
 
                     <p>
-                        <button class="btn btn-danger" ng-click="prepareForDelete(book.bookId)" data-toggle="modal"
+                        <button ng-show="book.user.id===userDetails.id || adminAction" class="btn btn-danger"
+                                ng-click="prepareForDelete(book.bookId)" data-toggle="modal"
                                 data-target="#deleteModal">
                             <i class="fa fa-trash"></i> Delete
                         </button>
-                        <a type="button" class="btn btn-info" ng-click="getCurrentBook(book.bookId)" data-toggle="modal"
+                        <a ng-show="book.user.id===userDetails.id || adminAction" type="button" class="btn btn-info"
+                           ng-click="getCurrentBook(book.bookId)" data-toggle="modal"
                            data-target="#editModal">
                             <i class="fa fa-pencil"></i>
                             Edit
@@ -83,20 +87,24 @@
         <div class="col-md-3">
             <div class="thumbnail">
 
-                <img src="{{book.images[0].url}}"style="height: 200px;" >
+                <img src="{{book.images[0].url}}" style="height: 200px;">
 
                 <div class="caption">
                     <h3><a href="#/main/categories/{{categoryId}}/books/{{book.bookId}}">{{book.name}}</a></h3>
 
                     <div style="height: 90px">
-                        <p>{{book.description |  limitTo: 90}}<span ng-show="(book.description).length>90">...</span></p>
+                        <p>{{book.description | limitTo: 90}}<span ng-show="(book.description).length>90">...</span></p>
                     </div>
                     <p>
-                        <button class="btn btn-danger" ng-click="prepareForDelete(book.bookId)" data-toggle="modal"
+                        <button ng-show="book.user.id===userDetails.id || adminAction" class="btn btn-danger"
+                                ng-click="prepareForDelete(book.bookId)"
+                                data-toggle="modal"
                                 data-target="#deleteModal">
                             <i class="fa fa-trash"></i> Delete
                         </button>
-                        <a type="button" class="btn btn-info" ng-click="getCurrentBook(book.bookId)" data-toggle="modal"
+                        <a ng-show="book.user.id===userDetails.id || adminAction" type="button" class="btn btn-info"
+                           ng-click="getCurrentBook(book.bookId)"
+                           data-toggle="modal"
                            data-target="#editModal">
                             <i class="fa fa-pencil"></i>
                             Edit

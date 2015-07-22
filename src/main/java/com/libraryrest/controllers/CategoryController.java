@@ -64,10 +64,7 @@ public class CategoryController {
             logger.error("POST: /categories/add" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
-        User currentUser = getCurrentUser();
 
-        category.setUser(currentUser);
-        System.out.println(currentUser);
         Integer categoryId = categoryDAO.saveOrUpdate(category);
         category.setCategoryId(categoryId);
         return category;
@@ -81,8 +78,6 @@ public class CategoryController {
             logger.error("PUT: /categories/" + category + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
-        User currentUser = getCurrentUser();
-        bookCategory.setUser(currentUser);
 
         bookCategory.setCategoryId(category);
         categoryDAO.update(bookCategory);

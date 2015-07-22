@@ -2,33 +2,37 @@
 <edit-category-directive></edit-category-directive>
 <delete-category-directive></delete-category-directive>
 <div class="list-group">
-   <center>
-       <div class="list-group-item active">
+    <center>
+        <div class="list-group-item active">
             <b>CATEGORIES</b>
-            <a id="plus_category" href="" data-toggle="modal" data-target="#addCategory"><i class="fa fa-plus fa-lg"></i></a>
-       </div>
-   </center>
-   <div ng-repeat="category in categories">
-       <center>
-           <div class="list-group-item">
-               <div class="row">
-                   <div class="col-md-9 ">
-                       <center>
+            <a ng-show="adminAction" id="plus_category" href="" data-toggle="modal" data-target="#addCategory"><i
+                    class="fa fa-plus fa-lg"></i></a>
+        </div>
+    </center>
+    <div ng-repeat="category in categories">
+        <center>
+            <div class="list-group-item">
+                <div class="row">
+                    <div class="col-md-9 ">
+                        <center>
                             <a ng-href="#/main/categories/{{category.categoryId}}/books">
-                                  <b>{{category.categoryTitle}}</b>
+                                <b style="margin-left: 50px">{{category.categoryTitle}}</b>
                             </a>
-                       </center>
-                   </div>
-                   <div class="col-md-3">
-                        <a class="func_icon" ng-click="getCurrentCategory(category.categoryId)" data-toggle="modal" data-target="#editCategory">
-                              <i class="fa fa-pencil fa-lg"></i>
+                        </center>
+                    </div>
+                    <div class="col-md-3">
+                        <a ng-show="adminAction" class="func_icon" ng-click="getCurrentCategory(category.categoryId)"
+                           data-toggle="modal" data-target="#editCategory">
+                            <i class="fa fa-pencil fa-lg"></i>
                         </a>
-                        <a class="func_icon" ng-click="prepareForDeleteCategory(category.categoryId)" data-toggle="modal" data-target="#deleteCategory">
+                        <a ng-show="adminAction" class="func_icon"
+                           ng-click="prepareForDeleteCategory(category.categoryId)" data-toggle="modal"
+                           data-target="#deleteCategory">
                             <i class="fa fa-trash fa-lg"></i>
                         </a>
-                   </div>
-               </div>
-           </div>
-       </center>
-   </div>
+                    </div>
+                </div>
+            </div>
+        </center>
+    </div>
 </div>

@@ -1,8 +1,7 @@
 package com.libraryrest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.libraryrest.enums.UserStatus;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,10 +43,7 @@ public class User implements UserDetails, Serializable {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @OneToMany(mappedBy = "user")
-    @Fetch(FetchMode.JOIN)
-    private Set<BookCategory> categories = new HashSet<BookCategory>();
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Book> books = new HashSet<Book>();
 
@@ -157,13 +153,6 @@ public class User implements UserDetails, Serializable {
         this.status = status;
     }
 
-    public Set<BookCategory> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<BookCategory> categories) {
-        this.categories = categories;
-    }
 
     public Set<Book> getBooks() {
         return books;
