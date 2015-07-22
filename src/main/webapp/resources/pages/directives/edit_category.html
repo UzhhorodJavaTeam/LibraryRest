@@ -6,15 +6,27 @@
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="editModalLabel">Edit Category</h4>
             </div>
-            <form name="Add_form" class="form-horizontal" id="add_edit_form" novalidate>
+            <form name="edit_form" class="form-horizontal" id="add_edit_form" novalidate>
                 <div class="modal-body">
-                    <div class="control-group">
-                        <label class="control-label" for="category_name">Category Name</label>
+                    <div ng-class="{'has-error':edit_form.categoryTitle.$invalid && (edit_form.categoryTitle.$dirty)}">
+                        <div class="control-group">
+                            <label class="control-label" for="category_name">Category Name</label>
 
-                        <div class="controls">
-                            <input class="form-control" type="text" id="category_name"
-                                   ng-model="currentCategory.categoryTitle"
-                                   placeholder="Please, type the category name" required>
+                            <div class="controls">
+                                <input class="form-control" type="text" id="category_name"
+                                       name="categoryTitle" ng-minlength="3" ng-maxlength="20"
+                                       ng-model="currentCategory.categoryTitle"
+                                       placeholder="Please, type the category name" required>
+
+                                <p ng-show="edit_form.categoryTitle.$error.required && (edit_form.categoryTitle.$dirty)"
+                                   class="help-block">Category title is required.</p>
+
+                                <p ng-show="edit_form.categoryTitle.$error.minlength"
+                                   class="help-block">Category title is required to be at least 3 characters.</p>
+
+                                <p ng-show="edit_form.categoryTitle.$error.maxlength"
+                                   class="help-block">Category title cannot be longer than 20 characters.</p>
+                            </div>
                         </div>
                     </div>
                 </div>

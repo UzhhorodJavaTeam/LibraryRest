@@ -157,6 +157,10 @@ public class User implements UserDetails, Serializable {
         this.status = status;
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/jatsko_working_branch
     public Set<Book> getBooks() {
         return books;
     }

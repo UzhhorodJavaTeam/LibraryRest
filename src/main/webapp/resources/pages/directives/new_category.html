@@ -2,23 +2,38 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addModalLabel">Add Category</h4>
             </div>
-            <form name="Add_form" class="form-horizontal" id="add_edit_form" novalidate>
+            <form name="addNewCategory" novalidate>
                 <div class="modal-body">
-                    <div class="control-group">
-                        <label class="control-label" for="category_name">Category Name</label>
+                    <div ng-class="{'has-error':addNewCategory.categoryTitle.$invalid && (addNewCategory.categoryTitle.$dirty)}">
+                        <label class="control-label" for="categoryTitle">Category Name</label>
+                        <input class="form-control" id="categoryTitle" ng-minlength="3" ng-maxlength="20"
+                               name="categoryTitle"
+                               placeholder="Enter category title" type="text"
+                               ng-model="newcategory.categoryTitle" required min="1"/>
 
-                        <div class="controls">
-                            <input class="form-control" type="text" id="category_name" ng-model="newcategory.categoryTitle"
-                                   placeholder="Please, type the category name" required>
-                        </div>
+                        <p ng-show="addNewCategory.categoryTitle.$error.required && (addNewCategory.categoryTitle.$dirty)"
+                           class="help-block">Category title is required.</p>
+
+                        <p ng-show="addNewCategory.categoryTitle.$error.minlength"
+                           class="help-block">Category title is required to be at least 3 characters.</p>
+
+                        <p ng-show="addNewCategory.categoryTitle.$error.maxlength"
+                           class="help-block">Category title cannot be longer than 20 characters.</p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<<<<<<< HEAD
                     <button type="submit" class="btn btn-primary" ng-disabled="!newcategory.categoryTitle" ng-click="addCategory(newcategory)" data-dismiss="modal">Add Category</button>
+=======
+                    <button type="button" class="btn btn-primary" ng-disabled="!newcategory.categoryTitle"
+                            ng-click="addCategory(newcategory)" data-dismiss="modal">Add Category
+                    </button>
+>>>>>>> origin/jatsko_working_branch
                 </div>
             </form>
         </div>

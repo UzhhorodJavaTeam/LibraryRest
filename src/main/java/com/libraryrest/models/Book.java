@@ -39,6 +39,10 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<Image>();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/jatsko_working_branch
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "userId", nullable = false)
     private User user;

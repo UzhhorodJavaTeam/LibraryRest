@@ -3,25 +3,51 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addModalLabel">Add Book</h4>
             </div>
             <form name="Add_form" class="form-horizontal" enctype="multipart/form-data" id="add_edit_form" novalidate>
                 <div class="modal-body">
-                    <div class="control-group">
-                        <label class="control-label" for="book_name">Book Name</label>
+                    <div ng-class="{'has-error':Add_form.book_name.$invalid && (Add_form.book_name.$dirty)}">
+                        <div class="control-group">
+                            <label class="control-label" for="book_name">Book Name</label>
 
-                        <div class="controls">
-                            <input class="form-control" type="text" id="book_name" ng-model="newbook.name"
-                                   placeholder="Please, type the book name" required>
+                            <div class="controls">
+                                <input class="form-control" type="text" id="book_name" ng-model="newbook.name"
+                                       name="book_name" ng-minlength="3" ng-maxlength="20"
+                                       placeholder="Please, type the book name" required>
+
+                                <p ng-show="Add_form.book_name.$error.required && (Add_form.book_name.$dirty)"
+                                   class="help-block">Book name is required.</p>
+
+                                <p ng-show="Add_form.book_name.$error.minlength"
+                                   class="help-block">Book name is required to be at least 3 characters.</p>
+
+                                <p ng-show="Add_form.book_name.$error.maxlength"
+                                   class="help-block">Book name cannot be longer than 20 characters.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="book_desc">Book Description</label>
+                    <div ng-class="{'has-error':Add_form.book_description.$invalid && (Add_form.book_description.$dirty)}">
+                        <div class="control-group">
+                            <label class="control-label" for="book_desc">Book Description</label>
 
-                        <div class="controls">
-                            <input class="form-control" type="text" id="book_desc" ng-model="newbook.description"
-                                   placeholder="Please, type the book description" required>
+                            <div class="controls">
+                               <textarea class="form-control" rows="2" id="book_desc" ng-model="newbook.description"
+                                         name="book_description" ng-minlength="20" ng-maxlength="200"
+                                         placeholder="Please, type the book description" style="max-width: 100%"
+                                         required></textarea>
+
+                                <p ng-show="Add_form.book_description.$error.required && (Add_form.book_description.$dirty)"
+                                   class="help-block">Book description is required.</p>
+
+                                <p ng-show="Add_form.book_description.$error.minlength"
+                                   class="help-block">Book description is required to be at least 20 characters.</p>
+
+                                <p ng-show="Add_form.book_description.$error.maxlength"
+                                   class="help-block">Book description cannot be longer than 200 characters.</p>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -44,13 +70,20 @@
                         </div>
                     </div>
                     <p>Upload image:</p>
-                    <input type="file" data-bind-file="" data-ng-model="theImage" accept="image/jpeg" />
+                    <input type="file" data-bind-file="" data-ng-model="theImage" accept="image/jpeg"/>
+
                     <p>Upload pdf:</p>
-                    <input type="file" data-bind-file="" data-ng-model="thePdf" accept="application/pdf" />
+                    <input type="file" data-bind-file="" data-ng-model="thePdf" accept="application/pdf"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<<<<<<< HEAD
                     <button type="submit" class="btn btn-primary" ng-disabled="!newbook.name || !newbook.description" ng-click="addBook(newbook)" data-dismiss="modal">Add Book</button>
+=======
+                    <button type="button" class="btn btn-primary" ng-disabled="!newbook.name || !newbook.description"
+                            ng-click="addBook(newbook)" data-dismiss="modal">Add Book
+                    </button>
+>>>>>>> origin/jatsko_working_branch
                 </div>
             </form>
         </div>

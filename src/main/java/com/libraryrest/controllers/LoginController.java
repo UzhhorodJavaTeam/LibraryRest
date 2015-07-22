@@ -4,19 +4,24 @@ package com.libraryrest.controllers;
 import com.libraryrest.DAO.BookDAO;
 import com.libraryrest.DAO.RoleDao;
 import com.libraryrest.DAO.UserDao;
+<<<<<<< HEAD
 import com.libraryrest.DAO.VoteDao;
+=======
+>>>>>>> origin/jatsko_working_branch
 import com.libraryrest.enums.UserRole;
 import com.libraryrest.enums.UserStatus;
 import com.libraryrest.models.Book;
 import com.libraryrest.models.Role;
 import com.libraryrest.models.User;
+<<<<<<< HEAD
 import com.libraryrest.models.Vote;
+=======
+>>>>>>> origin/jatsko_working_branch
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -50,14 +55,6 @@ public class LoginController {
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
-    }
-
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String getLoginPage(ModelMap model) {
-        logger.info("GET: /login");
-
-        return "LoginPage";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)

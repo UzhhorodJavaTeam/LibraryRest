@@ -68,6 +68,10 @@ public class CategoryController {
             logger.error("POST: /categories/add" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/jatsko_working_branch
         Integer categoryId = categoryDAO.saveOrUpdate(category);
         category.setCategoryId(categoryId);
         return category;

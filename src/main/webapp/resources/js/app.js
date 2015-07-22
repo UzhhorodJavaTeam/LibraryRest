@@ -49,6 +49,16 @@
                 controller: 'UserController'
             })
 
+            .when('/users', {
+                templateUrl: '/resources/pages/static pages/users.html',
+                controller: "UserController"
+            })
+
+            .when('/profile', {
+                templateUrl: '/resources/pages/static pages/profile.html',
+                controller: 'UserController'
+            })
+
             .when('/login', {
                 templateUrl: '/resources/pages/static pages/login.html',
                 controller: 'UserController'
@@ -65,7 +75,10 @@
             controller: function ($scope, $http, myService) {
                 myService.async().then(function () {
                     $scope.userDetails = myService.data();
+<<<<<<< HEAD
                     console.log(myService.data());
+=======
+>>>>>>> origin/jatsko_working_branch
                     $scope.authorized = myService.authorized();
                     $scope.role = myService.role();
                     $scope.adminAction = false;
@@ -82,6 +95,10 @@
                         $scope.accessCreateBook = false;
                     }
                 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/jatsko_working_branch
                 $scope.getAllCategories = function () {
                     $http.get('/categories')
                         .success(function (data) {
@@ -105,7 +122,7 @@
                 $scope.addBook = function (book) {
 
                     $http.post('/categories/' + $scope.categoryId + '/books', book)
-                        .success(function () {
+                        .success(function (data) {
                             $scope.booksCount++;
                             $scope.newbook = {};
                             $scope.uploadImage(book.name);
@@ -258,7 +275,6 @@
                         $scope.author = '';
                     }).error(function () {
                         toastr.error('Add failed!')
-
                     });
                 };
 
@@ -302,7 +318,28 @@
             $scope.book = data;
         });
     }]);
+    app.factory('myService', function ($http, $q) {
+        var deffered = $q.defer();
+        var data = [];
+        var role = "";
+        var authorized = false;
+        var myService = {};
 
+        myService.async = function () {
+            $http.get('/users/user')
+                .success(function (user) {
+                    data = user;
+                    authorized = true;
+                    deffered.resolve();
+                });
+            return deffered.promise;
+        };
+        myService.role = function () {
+            role = data.authorities[0].authority;
+            return role;
+        };
+
+<<<<<<< HEAD
     app.factory('myService', function ($http, $q) {
         var deffered = $q.defer();
         var data = [];
@@ -337,6 +374,21 @@
 
 
     app.controller('UserController',['$scope','$http', '$location', function($scope, $http, $location) {
+=======
+        myService.authorized = function () {
+            return authorized;
+        };
+
+        myService.data = function () {
+            return data;
+        };
+
+        return myService;
+    });
+
+    app.controller('UserController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+        $scope.userLogin = '';
+>>>>>>> origin/jatsko_working_branch
         $scope.newuser = {};
 
         $scope.register = function (user) {
@@ -350,6 +402,16 @@
                     toastr.error("Register Failed");
                 })
         };
+
+        $scope.getAllUsers = function () {
+            $http.get('/users').success(function (userList) {
+                $scope.users = userList;
+            }).error(function (data) {
+                console.log(data);
+            })
+        };
+
+        $scope.getAllUsers();
     }]);
 
 
@@ -452,7 +514,6 @@
         $scope.resetImage = function () {
             $scope.theImage = null;
         };
-
 
         $scope.getAllBooks = function () {
             $http.get('/categories/' + $scope.categoryId + "/books").success(function (data) {
