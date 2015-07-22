@@ -24,7 +24,6 @@
 // configure our routes
     app.config(function ($routeProvider) {
         $routeProvider
-
             .when('/main/categories/:categoryId/books', {
                 templateUrl: '/resources/pages/books/books_list.html',
                 controller: 'BooksController'
@@ -63,7 +62,26 @@
         return {
             restrict: 'E',
             templateUrl: '/resources/pages/directives/sidebar.html',
-            controller: function ($scope, $http) {
+            controller: function ($scope, $http, myService) {
+                myService.async().then(function () {
+                    $scope.userDetails = myService.data();
+                    console.log(myService.data());
+                    $scope.authorized = myService.authorized();
+                    $scope.role = myService.role();
+                    $scope.adminAction = false;
+                    if ($scope.role === "ROLE_ADMIN") {
+                        $scope.adminAction = true;
+                    } else {
+                        $scope.adminAction = false;
+                    }
+
+                    $scope.accessCreateBook = false;
+                    if ($scope.role === "ROLE_USER" || $scope.role === "ROLE_ADMIN") {
+                        $scope.accessCreateBook = true;
+                    } else {
+                        $scope.accessCreateBook = false;
+                    }
+                });
                 $scope.getAllCategories = function () {
                     $http.get('/categories')
                         .success(function (data) {
@@ -285,9 +303,40 @@
         });
     }]);
 
+    app.factory('myService', function ($http, $q) {
+        var deffered = $q.defer();
+        var data = [];
+        var role = "";
+        var authorized = false;
+        var myService = {};
+
+        myService.async = function () {
+            $http.get('/users/user')
+                .success(function (user) {
+                    data = user;
+                    authorized = true;
+                    deffered.resolve();
+                });
+            return deffered.promise;
+        };
+        myService.role = function () {
+            role = data.authorities[0].authority;
+            return role;
+        };
+
+        myService.authorized = function () {
+            return authorized;
+        };
+
+        myService.data = function () {
+            return data;
+        };
+
+        return myService;
+    });
+
 
     app.controller('UserController',['$scope','$http', '$location', function($scope, $http, $location) {
-
         $scope.newuser = {};
 
         $scope.register = function (user) {
@@ -325,16 +374,77 @@
         };
     }]);
 
-    app.controller('BooksController', ['filterFilter', '$scope', '$routeParams', '$http', '$window', function (filterFilter, $scope, $routeParams, $http, $window) {
+    app.directive("starRating", function() {
+        return {
+            restrict : "EA",
+            template : "<ul class='rating' ng-class='{readonly: readonly}'>" +
+            "  <li ng-repeat='star in stars' ng-class='star' ng-click='toggle($index)'>" +
+            "    <i class='fa fa-star'></i>" + //&#9733
+            "  </li>" +
+            "</ul>",
+            scope : {
+                ratingValue : "=ngModel",
+                max : "=?", //optional: default is 5
+                onRatingSelected : "&?",
+                readonly: "=?"
+            },
+            link : function(scope, elem, attrs) {
+                if (scope.max == undefined) { scope.max = 5; }
+                function updateStars() {
+                    scope.stars = [];
+                    for (var i = 0; i < scope.max; i++) {
+                        scope.stars.push({
+                            filled : i < scope.ratingValue
+                        });
+                    }
+                };
+                scope.toggle = function(index) {
+                    if (scope.readonly == undefined || scope.readonly == false){
+                        scope.ratingValue = index + 1;
+                        scope.onRatingSelected({
+                            rating: index + 1
+                        });
+                    }
+                };
+                scope.$watch("ratingValue", function(oldVal, newVal) {
+                    if (newVal) { updateStars(); }
+                });
+            }
+        };
+    });
+
+    app.controller('BooksController', ['filterFilter', '$scope', '$routeParams', '$http', '$window', '$filter', function (filterFilter, $scope, $routeParams, $http, $window, $filter) {
         $scope.categoryId = $routeParams.categoryId;
         $scope.bookId = $routeParams.bookId;
         $scope.newbook = {};
         $scope.maxSize = 12;
         $scope.currentPage = 1;
         $scope.searchText = '';
-
+        $scope.rating = 1;
+        $scope.isReadonly = true;
         $scope.theImage = null;
         $scope.thePdf = null;
+
+        $scope.refreshData = function (value, bookId, id) {
+            var fd = new FormData();
+            fd.append("value", value);
+            fd.append("bookId", bookId);
+            fd.append("userId", id);
+            $http({
+                method: 'POST',
+                url: '/votes',
+                headers: {'Content-Type': undefined},
+                data: fd,
+                transformRequest: angular.identity
+            })
+                .success(function (data) {
+                    $scope.getBooksByCategoryAndPage($scope.currentPage);
+                    toastr.success("Vote recorded")
+            })
+                .error(function (data) {
+                    toastr.error(data)
+                });
+        };
 
         $scope.resetPdf = function () {
             $scope.thePdf = null;
@@ -453,5 +563,7 @@
         });
         $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
     }
+
+
 })
 ();

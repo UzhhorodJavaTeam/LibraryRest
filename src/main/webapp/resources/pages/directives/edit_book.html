@@ -41,7 +41,7 @@
                                     <label class="control-label" for="dynamic-options">Authors:</label>
 
                                     <div class="controls">
-                                        <ol id="dynamic-options" class="nya-bs-select" ng-model="newbook.authors"
+                                        <ol id="dynamic-options" class="nya-bs-select" ng-model="currentBook.authors"
                                             title="Choose author..." multiple data-live-search="true" data-size="5">
                                             <li nya-bs-option="author in authors">
                                                 <a>{{ author.firstName }}&nbsp;{{author.lastName}}
@@ -60,7 +60,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" ng-disabled="!currentBook.name || !currentBook.description" ng-click="editBook(currentBook, currentBook.bookId)" data-dismiss="modal">Edit Book</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="!currentBook.name || !currentBook.description" ng-click="editBook(currentBook, currentBook.bookId)" data-dismiss="modal">Edit Book</button>
                 </div>
             </form>
         </div>

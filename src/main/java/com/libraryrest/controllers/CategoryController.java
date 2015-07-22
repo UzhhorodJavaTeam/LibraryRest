@@ -2,9 +2,7 @@ package com.libraryrest.controllers;
 
 import com.libraryrest.DAO.*;
 import com.libraryrest.exceptions.InvalidRequestException;
-import com.libraryrest.models.Book;
-import com.libraryrest.models.BookCategory;
-import com.libraryrest.models.User;
+import com.libraryrest.models.*;
 import com.libraryrest.validators.BookValidator;
 import com.libraryrest.validators.CategoryValidator;
 import org.apache.log4j.LogManager;
@@ -38,6 +36,12 @@ public class CategoryController {
     UserDao userDAO;
 
     @Autowired
+    VoteDao voteDao;
+
+    @Autowired
+    RatingDao ratingDao;
+
+    @Autowired
     CategoryValidator categoryValidator;
 
     @Autowired
@@ -64,10 +68,6 @@ public class CategoryController {
             logger.error("POST: /categories/add" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
-        User currentUser = getCurrentUser();
-
-        category.setUser(currentUser);
-        System.out.println(currentUser);
         Integer categoryId = categoryDAO.saveOrUpdate(category);
         category.setCategoryId(categoryId);
         return category;
@@ -81,8 +81,6 @@ public class CategoryController {
             logger.error("PUT: /categories/" + category + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
-        User currentUser = getCurrentUser();
-        bookCategory.setUser(currentUser);
 
         bookCategory.setCategoryId(category);
         categoryDAO.update(bookCategory);
@@ -128,13 +126,21 @@ public class CategoryController {
             throw new InvalidRequestException("Invalid book", bindingResult);
         }
         User currentUser = getCurrentUser();
-
         book.setUser(currentUser);
 
         BookCategory bookCategory = categoryDAO.findById(categoryId);
         book.setBookCategory(bookCategory);
         Integer bookId = bookDAO.saveOrUpdate(book);
         book.setBookId(bookId);
+
+        Rating rating = new Rating(0,0.0,book);
+        ratingDao.saveOrUpdate(rating);
+
+        List<User> users = userDAO.findAll();
+        for (User user : users) {
+            Vote vote = new Vote(null, book, user);
+            voteDao.saveOrUpdate(vote);
+        }
 
         return book;
     }

@@ -20,12 +20,6 @@ public class BookCategory implements Serializable {
     @OneToMany(mappedBy = "bookCategory", fetch = FetchType.EAGER,cascade = {CascadeType.REFRESH,CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Book> books = new ArrayList<Book>();
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "userId", nullable = false)
-    private User user;
-
-
     public BookCategory() {
     }
 
@@ -55,14 +49,6 @@ public class BookCategory implements Serializable {
 
     public void setBooks(List<Book> books) {
         this.books = books;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override

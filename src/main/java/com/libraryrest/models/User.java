@@ -1,8 +1,7 @@
 package com.libraryrest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.libraryrest.enums.UserStatus;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,7 @@ public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "login", unique = true, nullable = false)
     private String login;
@@ -44,25 +43,26 @@ public class User implements UserDetails, Serializable {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @OneToMany(mappedBy = "user")
-    @Fetch(FetchMode.JOIN)
-    private Set<BookCategory> categories = new HashSet<BookCategory>();
-
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Book> books = new HashSet<Book>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Author> authors = new HashSet<Author>();
 
-    public Long getId() {
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Vote> votes = new HashSet<Vote>();
+
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
-
-
 
     public String getLogin() {
         return login;
@@ -157,19 +157,27 @@ public class User implements UserDetails, Serializable {
         this.status = status;
     }
 
-    public Set<BookCategory> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<BookCategory> categories) {
-        this.categories = categories;
-    }
-
     public Set<Book> getBooks() {
         return books;
     }
 
     public void setBooks(Set<Book> books) {
         this.books = books;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
+
+    public Set<Vote> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Set<Vote> votes) {
+        this.votes = votes;
     }
 }

@@ -1,5 +1,6 @@
 package com.libraryrest.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.libraryrest.enums.UserRole;
 
 import javax.persistence.*;
@@ -16,7 +17,8 @@ public class Role implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<User> users = new HashSet<User>();
 
     @Enumerated(EnumType.STRING)

@@ -24,12 +24,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public List<User> findAll() {
-        return null;
+        return sessionFactory.getCurrentSession().createQuery("from User").list();
     }
 
     @Override
     @Transactional
-    public User findById(Long userId) {
+    public User findById(Integer userId) {
         String hql = "from User u where u.id = :userId";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         query.setParameter("userId", userId);
@@ -50,8 +50,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public void save(User user) {
+    public Integer save(User user) {
         sessionFactory.getCurrentSession().save(user);
+        return user.getId();
     }
 
     @Override
@@ -68,7 +69,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public void remove(Long id) {
+    public void remove(Integer id) {
         User user = findById(id);
         sessionFactory.getCurrentSession().delete(user);
     }
