@@ -45,10 +45,10 @@ public class LoginController {
         logger.info("POST: /register");
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
         User newUser = user;
-        if(roleDao.findById(2L) == null){
-            Role uRole = new Role(UserRole.ROLE_USER);
+        if (roleDao.findById(1L) == null){
             Role aRole = new Role(UserRole.ROLE_ADMIN);
             roleDao.saveOrUpdate(aRole);
+            Role uRole = new Role(UserRole.ROLE_USER);
             roleDao.saveOrUpdate(uRole);
         }
         Role userrole = roleDao.findById(2L);
