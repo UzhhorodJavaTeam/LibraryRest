@@ -1,6 +1,9 @@
 package com.libraryrest.controllers;
 
-import com.libraryrest.DAO.*;
+import com.libraryrest.DAO.BookDAO;
+import com.libraryrest.DAO.CategoryDAO;
+import com.libraryrest.DAO.ImageDao;
+import com.libraryrest.DAO.UserDao;
 import com.libraryrest.exceptions.InvalidRequestException;
 import com.libraryrest.models.Book;
 import com.libraryrest.models.BookCategory;
@@ -16,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 /**
  * Created by yura on 27.05.15.
  */
@@ -78,7 +82,7 @@ public class CategoryController {
             logger.error("PUT: /categories/" + category + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
-
+        bookCategory.setBooks(null);
         bookCategory.setCategoryId(category);
         categoryDAO.update(bookCategory);
         return bookCategory;
@@ -143,9 +147,7 @@ public class CategoryController {
             logger.error("POST: categories/" + categoryId + "/books/" + bookId + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid book", bindingResult);
         }
-        User currentUser = getCurrentUser();
-        book.setUser(currentUser);
-
+        book.setUser(bookDAO.findById(bookId).getUser());
         book.setBookCategory(categoryDAO.findById(categoryId));
         book.setBookId(bookId);
 

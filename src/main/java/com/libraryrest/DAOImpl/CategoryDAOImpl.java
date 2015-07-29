@@ -50,8 +50,8 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     @Transactional
-    public Integer update(BookCategory category){
-        sessionFactory.getCurrentSession().merge(category);
+    public Integer update(BookCategory category) {
+        sessionFactory.getCurrentSession().update( category);
         return category.getCategoryId();
     }
 }

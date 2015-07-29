@@ -28,7 +28,7 @@ public class BookDAOImpl implements BookDAO {
     @Transactional
     public List<Book> getBooksByPage(Integer page) {
         count = 12;
-        startAt =  (count * (page - 1));
+        startAt = (count * (page - 1));
 
         Query query = sessionFactory.getCurrentSession().createQuery("FROM Book");
         query.setFirstResult(startAt);
@@ -44,7 +44,8 @@ public class BookDAOImpl implements BookDAO {
     @Transactional
     public List<Book> getAllBook() {
         Query query = sessionFactory.getCurrentSession().createQuery("from Book");
-        List<Book> books = (List<Book>) query.list();;
+        List<Book> books = (List<Book>) query.list();
+        ;
         return books;
     }
 
@@ -52,7 +53,7 @@ public class BookDAOImpl implements BookDAO {
     @Transactional
     public List<Book> getBooksByCategoryAndPage(Integer categoryId, Integer page) {
         count = 12;
-        startAt =  (count * (page - 1));
+        startAt = (count * (page - 1));
 
         Query query = sessionFactory.getCurrentSession().createQuery("FROM Book b WHERE b.bookCategory.categoryId = :categoryId");
         query.setParameter("categoryId", categoryId);
@@ -67,7 +68,7 @@ public class BookDAOImpl implements BookDAO {
 
     @Override
     @Transactional
-    public List<Book> findByCategoryId(Integer categoryId){
+    public List<Book> findByCategoryId(Integer categoryId) {
         Query query = sessionFactory.getCurrentSession().createQuery("FROM Book b WHERE b.bookCategory.categoryId = :categoryId");
         query.setParameter("categoryId", categoryId);
 
@@ -100,11 +101,10 @@ public class BookDAOImpl implements BookDAO {
 
     @Override
     @Transactional
-    public Integer update(Book book){
+    public Integer update(Book book) {
         sessionFactory.getCurrentSession().merge(book);
         return book.getBookId();
     }
-
 
 
     @Override
