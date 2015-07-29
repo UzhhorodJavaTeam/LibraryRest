@@ -179,6 +179,30 @@
         };
     });
 
+
+    app.directive('deleteUserDirective', function () {
+        return {
+            restrict: 'E',
+            templateUrl: '/resources/pages/directives/delete_user.html',
+            controller: function ($scope, $http) {
+                $scope.prepareForDeleteUser = function (userId) {
+                    $scope.userIdForDelete = userId;
+                };
+
+                $scope.deleteUser = function (userId) {
+                    $http.delete('/users/' + userId)
+                        .success(function (data) {
+                            $scope.getAllUsers();
+                            toastr.success(data);
+                        })
+                        .error(function () {
+                            toastr.error('Delete Failed');
+                        });
+                };
+            }
+        };
+    });
+
     app.directive('deleteCategoryDirective', function () {
         return {
             restrict: 'E',

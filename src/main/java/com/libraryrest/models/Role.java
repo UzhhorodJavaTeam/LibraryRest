@@ -13,12 +13,12 @@ import java.util.Set;
 public class Role implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<User> users = new HashSet<User>();
 
     @Enumerated(EnumType.STRING)
@@ -57,4 +57,8 @@ public class Role implements Serializable {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "id: " + id + "name: "+roleName;
+    }
 }

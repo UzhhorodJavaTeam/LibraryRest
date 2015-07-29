@@ -33,7 +33,7 @@ public class User implements UserDetails, Serializable {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,CascadeType.PERSIST})
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "roleId"))
@@ -50,11 +50,6 @@ public class User implements UserDetails, Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Author> authors = new HashSet<Author>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Vote> votes = new HashSet<Vote>();
-
 
     public Integer getId() {
         return id;
@@ -173,11 +168,4 @@ public class User implements UserDetails, Serializable {
         this.authors = authors;
     }
 
-    public Set<Vote> getVotes() {
-        return votes;
-    }
-
-    public void setVotes(Set<Vote> votes) {
-        this.votes = votes;
-    }
 }

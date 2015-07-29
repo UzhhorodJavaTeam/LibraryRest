@@ -4,14 +4,10 @@ package com.libraryrest.controllers;
 import com.libraryrest.DAO.BookDAO;
 import com.libraryrest.DAO.RoleDao;
 import com.libraryrest.DAO.UserDao;
-import com.libraryrest.DAO.VoteDao;
-
 import com.libraryrest.enums.UserRole;
 import com.libraryrest.enums.UserStatus;
-import com.libraryrest.models.Book;
 import com.libraryrest.models.Role;
 import com.libraryrest.models.User;
-import com.libraryrest.models.Vote;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +18,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -41,9 +36,6 @@ public class LoginController {
     BookDAO bookDAO;
 
     @Autowired
-    VoteDao voteDao;
-
-    @Autowired
     @Qualifier("registrationFormValidator")
     private Validator validator;
 
@@ -57,10 +49,10 @@ public class LoginController {
         logger.info("POST: /register");
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
         User newUser = user;
-        if(roleDao.findById(2L) == null){
-            Role uRole = new Role(UserRole.ROLE_USER);
+        if (roleDao.findById(1L) == null){
             Role aRole = new Role(UserRole.ROLE_ADMIN);
             roleDao.saveOrUpdate(aRole);
+            Role uRole = new Role(UserRole.ROLE_USER);
             roleDao.saveOrUpdate(uRole);
         }
 
@@ -71,11 +63,6 @@ public class LoginController {
         newUser.setStatus(UserStatus.ACTIVE);
         newUser.setRoles(roles);
         userDao.save(newUser);
-        List<Book> books = bookDAO.getAllBook();
-        for (Book book : books) {
-            Vote vote = new Vote(null,book,newUser);
-            voteDao.saveOrUpdate(vote);
-        }
         return "Register successfully";
     }
 
