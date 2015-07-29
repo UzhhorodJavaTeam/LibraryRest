@@ -138,6 +138,7 @@
                 $scope.getCurrentBook = function (bookId) {
                     $http.get('/categories/' + $scope.categoryId + '/books/' + bookId).success(function (data) {
                         $scope.currentBook = data;
+                        $scope.currentBook.user = null;
                     });
                 };
 
@@ -147,7 +148,11 @@
                             $scope.uploadImage(book.name);
                             toastr.success('Edited Successfully');
                         })
-                        .error(function () {
+                        .error(function (data, status, headers, config) {
+                            console.log(data);
+                            console.log(status);
+                            console.log(headers);
+                            console.log(config);
                             toastr.error('Edit Failed');
                         })
                 };
@@ -235,6 +240,7 @@
                 $scope.getCurrentCategory = function (categoryId) {
                     $http.get('/categories/' + categoryId).success(function (data) {
                         $scope.currentCategory = data;
+                        $scope.currentCategory.books = null;
                     });
                 };
 
