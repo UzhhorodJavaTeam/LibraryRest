@@ -69,6 +69,15 @@
         $routeProvider.otherwise({redirectTo: '/'});
     });
 
+    app. filter('split', function() {
+        return function(input, delimiter) {
+            var delimiter = delimiter || ',';
+
+            return input.split(delimiter);
+        }
+    });
+
+
     app.directive('categorySidebar', function () {
         return {
             restrict: 'E',
@@ -139,6 +148,7 @@
                 $scope.getCurrentBook = function (bookId) {
                     $http.get('/categories/' + $scope.categoryId + '/books/' + bookId).success(function (data) {
                         $scope.currentBook = data;
+
                         $scope.currentBook.user = null;
                     });
                 };
@@ -329,6 +339,25 @@
         };
     });
 
+    app.directive('errSrc', function() {
+        return {
+            link: function(scope, element, attrs) {
+                element.bind('error', function() {
+                    if (attrs.src != attrs.errSrc) {
+                        attrs.$set('src', attrs.errSrc);
+                    }
+                });
+
+                attrs.$observe('ngSrc', function(value) {
+                    if (!value && attrs.errSrc) {
+                        attrs.$set('src', attrs.errSrc);
+                    }
+                });
+            }
+        }
+    });
+
+
     app.controller('staticPagesController', function () {
 
     });
@@ -373,9 +402,17 @@
         return myService;
     });
 
-    app.controller('UserController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+    app.controller('UserController', ['$scope', '$http', '$location','myService', '$route', function ($scope, $http, $location, myService, $route) {
         $scope.userLogin = '';
         $scope.newuser = {};
+        $scope.editUser = {};
+        $scope.userAvatar = null;
+        $scope.currentUserInfo = {};
+        $scope.currentUserPassword = {};
+
+        $scope.resetUserAvatar = function () {
+            $scope.userAvatar = null;
+        };
 
         $scope.register = function (user) {
             $http.post('/register', user)
@@ -387,6 +424,64 @@
                 .error(function () {
                     toastr.error("Register Failed");
                 })
+        };
+
+        $scope.getCurrentUserInfo = function () {
+            myService.async().then(function () {
+                $scope.userAvatarPath = myService.data().avatarUrl;
+                $scope.currentUserInfo.firstName = myService.data().firstName;
+                $scope.currentUserInfo.lastName = myService.data().lastName;
+                $scope.currentUserInfo.email = myService.data().email;
+                $scope.helloName = myService.data().firstName;
+            });
+        };
+
+
+
+        $scope.getCurrentUserInfo();
+
+        $scope.editUserInfo = function (newUserInfo) {
+            $http.put("/users/"+myService.data().id, newUserInfo)
+                .success(function (data) {
+                    myService.data().firstName = $scope.currentUserInfo.firstName;
+                    myService.data().lastName = $scope.currentUserInfo.lastName;
+                    myService.data().email = $scope.currentUserInfo.email;
+                    $scope.helloName =  $scope.currentUserInfo.firstName;
+                    $scope.uploadUserAvatar(myService.data().login);
+                    toastr.success("Profile Updated")
+                })
+                .error(function (data) {
+                    toastr.error(data);
+                })
+        };
+
+        $scope.editUserPassword = function (newUserPassword) {
+            $http.put("/users/"+myService.data().id, newUserPassword)
+                .success(function (data) {
+                    $scope.currentUserPassword = {};
+                    toastr.success("Profile Updated")
+                })
+                .error(function (data) {
+                    toastr.error(data);
+                })
+        };
+
+        $scope.uploadUserAvatar = function (login) {
+            var fd = new FormData();
+            fd.append("login", login);
+            fd.append("avatar", $scope.userAvatar);
+            $http({
+                method: 'POST',
+                url: '/uploadUserAvatar',
+                headers: {'Content-Type': undefined},
+                data: fd,
+                transformRequest: angular.identity
+            }).success(function (data) {
+                $scope.userAvatarPath = data;
+                $scope.resetUserAvatar();
+                fd = null;
+            }).error(function (data) {
+            });
         };
 
         $scope.getAllUsers = function () {
@@ -490,41 +585,45 @@
         $scope.getBooksByCategoryAndPage($scope.currentPage);
 
         $scope.uploadImage = function (bookName) {
-            var fd = new FormData();
-            fd.append("bookName", bookName);
-            fd.append("image", $scope.theImage);
-            $http({
-                method: 'POST',
-                url: '/uploadImage',
-                headers: {'Content-Type': undefined},
-                data: fd,
-                transformRequest: angular.identity
-            }).success(function (data) {
-                $scope.getBooksByCategoryAndPage($scope.currentPage);
-                $scope.resetImage();
-                fd = null;
-            }).error(function (data) {
-            });
-            $scope.resetImage();
+            if($scope.theImage!=null){
+                var fd = new FormData();
+                fd.append("bookName", bookName);
+                fd.append("image", $scope.theImage);
+                $http({
+                    method: 'POST',
+                    url: '/uploadImage',
+                    headers: {'Content-Type': undefined},
+                    data: fd,
+                    transformRequest: angular.identity
+                }).success(function (data) {
+                    $scope.getBooksByCategoryAndPage($scope.currentPage);
+                    $scope.resetImage();
+                    fd = null;
+                }).error(function (data) {
+                });
+            }
+            $scope.getBooksByCategoryAndPage($scope.currentPage);
             $scope.uploadPdf(bookName);
         };
 
         $scope.uploadPdf = function (bookName) {
-            var fd = new FormData();
-            fd.append("bookName", bookName);
-            fd.append("pdf", $scope.thePdf);
-            $http({
-                method: 'POST',
-                url: '/uploadPdf',
-                headers: {'Content-Type': undefined},
-                data: fd,
-                transformRequest: angular.identity
-            }).success(function (data) {
+            if($scope.thePdf!=null){
+                var fd = new FormData();
+                fd.append("bookName", bookName);
+                fd.append("pdf", $scope.thePdf);
+                $http({
+                    method: 'POST',
+                    url: '/uploadPdf',
+                    headers: {'Content-Type': undefined},
+                    data: fd,
+                    transformRequest: angular.identity
+                }).success(function (data) {
+                    $scope.resetPdf();
+                    fd = null;
+                }).error(function (data) {
+                });
                 $scope.resetPdf();
-                fd = null;
-            }).error(function (data) {
-            });
-            $scope.resetPdf();
+            }
         };
     }]);
 

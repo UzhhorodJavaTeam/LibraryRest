@@ -12,6 +12,12 @@
         <input type="password" class="form-control" id="exampleInputPassword" placeholder="Password" ng-model="newuser.password">
     </div>
     <div class="form-group">
+        <label for="exampleInputPassword">Confirm Password</label>
+        <input type="password" class="form-control" id="exampleInputMatchingPassword" placeholder="********" ng-model="newuser.matchingPassword">
+                <span ng-show="newuser.matchingPassword!=newuser.password"
+                      class="help-block">Password don`t match.</span>
+    </div>
+    <div class="form-group">
         <label for="exampleInputFirstName">First name</label>
         <input type="text" class="form-control" id="exampleInputFirstName" placeholder="First Name" ng-model="newuser.firstName">
     </div>
@@ -19,5 +25,5 @@
         <label for="exampleInputLastName">Last name</label>
         <input type="text" class="form-control" id="exampleInputLastName" placeholder="Last Name" ng-model="newuser.lastName">
     </div>
-    <button type="submit" class="btn btn-success" ng-click="register(newuser)">Register me!</button>
+    <button type="submit" class="btn btn-success" ng-disabled="newuser.matchingPassword!=newuser.password" ng-click="register(newuser)">Register me!</button>
 </form>

@@ -34,14 +34,12 @@ public class Book implements Serializable {
     @JoinTable(name = "catalog", joinColumns = @JoinColumn(name = "bookId"), inverseJoinColumns = @JoinColumn(name = "categoryId"))
     private BookCategory bookCategory;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private List<Image> images = new ArrayList<Image>();
-
-
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
+    @Column(name = "imageUrl")
+    private String imageUrl;
 
     @Column(name = "pdfFileUrl")
     private String pdfFileUrl;
@@ -94,12 +92,12 @@ public class Book implements Serializable {
         this.bookCategory = bookCategory;
     }
 
-    public List<Image> getImages() {
-        return images;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImages(List<Image> images) {
-        this.images = images;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getPdfFileUrl() {

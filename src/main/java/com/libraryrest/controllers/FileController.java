@@ -2,9 +2,9 @@ package com.libraryrest.controllers;
 
 
 import com.libraryrest.DAO.BookDAO;
-import com.libraryrest.DAO.ImageDao;
+import com.libraryrest.DAO.UserDao;
 import com.libraryrest.models.Book;
-import com.libraryrest.models.Image;
+import com.libraryrest.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,12 +22,11 @@ import java.io.FileOutputStream;
 @RestController
 public class FileController {
 
-
-    @Autowired
-    ImageDao imageDao;
-
     @Autowired
     BookDAO bookDAO;
+
+    @Autowired
+    UserDao userDao;
 
     @RequestMapping(value = "/uploadImage", method = RequestMethod.POST)
     public void uploadImageHandler(@RequestParam("image") MultipartFile file,
@@ -43,8 +42,8 @@ public class FileController {
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                Image image = new Image();
-                String fileName = image.hashCode() + ((int) Math.random()*9999) + ".jpeg";
+                Book book = bookDAO.findByName(bookName);
+                String fileName = book.hashCode() + ((int) Math.random()*9999) + ".jpeg";
                 // Create the file on server
                 File serverFile = new File(dir.getAbsolutePath()
                         + File.separator + fileName);
@@ -52,10 +51,10 @@ public class FileController {
                         new FileOutputStream(serverFile));
                 stream.write(bytes);
                 stream.close();
-                Book book = bookDAO.findByName(bookName);
-                image.setUrl(pathForDatabase + fileName);
-                image.setBook(book);
-                imageDao.saveOrUpdate(image);
+                //треба доробити
+                book.setImageUrl(pathForDatabase + fileName);
+                bookDAO.update(book);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,4 +94,41 @@ public class FileController {
             }
         }
     }
+
+    @RequestMapping(value = "/uploadUserAvatar", method = RequestMethod.POST)
+    public String uploadUserAvatarHandler(@RequestParam("avatar") MultipartFile file,
+                                   @RequestParam("login") String login) {
+        String pathForDatabase = "";
+        String fileName = "";
+        if (!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                // find path
+                String path = System.getProperty("user.home") + "/images";
+                pathForDatabase = "/images/";
+                // Creating the directory to store file
+                File dir = new File(path);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                User user = userDao.findByName(login);
+                fileName = user.hashCode() + ((int) Math.random()*9999) + ".jpeg";
+                // Create the file on server
+                File serverFile = new File(dir.getAbsolutePath()
+                        + File.separator + fileName);
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(serverFile));
+                stream.write(bytes);
+                stream.close();
+                user.setAvatarUrl(pathForDatabase + fileName);
+                userDao.update(user);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return pathForDatabase + fileName;
+    }
+
 }

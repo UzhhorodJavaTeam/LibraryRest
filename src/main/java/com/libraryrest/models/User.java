@@ -17,12 +17,17 @@ public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @Column(name = "login", unique = true, nullable = false)
     private String login;
+
     @Column(name = "password", nullable = false)
     private String password;
+
+    @JsonIgnore
+    @Transient
+    private String matchingPassword;
 
     @Column(name = "firstName", nullable = false)
     private String firstName;
@@ -47,18 +52,20 @@ public class User implements UserDetails, Serializable {
     @OneToMany(mappedBy = "user")
     private Set<Book> books = new HashSet<Book>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Author> authors = new HashSet<Author>();
 
-    public Long getId() {
+    @Column(name = "avatarUrl")
+    private String avatarUrl;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
-
-
 
     public String getLogin() {
         return login;
@@ -86,6 +93,22 @@ public class User implements UserDetails, Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getMatchingPassword() {
+        return matchingPassword;
+    }
+
+    public void setMatchingPassword(String matchingPassword) {
+        this.matchingPassword = matchingPassword;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public Set<Role> getRoles() {

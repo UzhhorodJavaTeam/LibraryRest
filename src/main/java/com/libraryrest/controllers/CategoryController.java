@@ -2,7 +2,6 @@ package com.libraryrest.controllers;
 
 import com.libraryrest.DAO.BookDAO;
 import com.libraryrest.DAO.CategoryDAO;
-import com.libraryrest.DAO.ImageDao;
 import com.libraryrest.DAO.UserDao;
 import com.libraryrest.exceptions.InvalidRequestException;
 import com.libraryrest.models.Book;
@@ -34,9 +33,6 @@ public class CategoryController {
 
     @Autowired
     BookDAO bookDAO;
-
-    @Autowired
-    ImageDao imageDao;
 
     @Autowired
     UserDao userDAO;
@@ -82,9 +78,9 @@ public class CategoryController {
             logger.error("PUT: /categories/" + category + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid category", bindingResult);
         }
-        bookCategory.setBooks(null);
-        bookCategory.setCategoryId(category);
-        categoryDAO.update(bookCategory);
+        BookCategory bc = categoryDAO.findById(category);
+        bc.setCategoryTitle(bookCategory.getCategoryTitle());
+        categoryDAO.update(bc);
         return bookCategory;
     }
 
@@ -147,13 +143,16 @@ public class CategoryController {
             logger.error("POST: categories/" + categoryId + "/books/" + bookId + "/edit" + bindingResult);
             throw new InvalidRequestException("Invalid book", bindingResult);
         }
-        book.setUser(bookDAO.findById(bookId).getUser());
-        book.setBookCategory(categoryDAO.findById(categoryId));
-        book.setBookId(bookId);
+        System.out.println(1);
+        Book b = bookDAO.findById(bookId);
+        b.setDescription(book.getDescription());
+        b.setName(book.getName());
+        b.setAuthors(book.getAuthors());
+        b.setBookId(bookId);
 
-        bookDAO.update(book);
+        bookDAO.update(b);
 
-        return book;
+        return b;
     }
 
     @RequestMapping(value = "/{categoryId}/books/{bookId}", method = RequestMethod.GET)
