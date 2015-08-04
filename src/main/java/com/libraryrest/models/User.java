@@ -59,6 +59,9 @@ public class User implements UserDetails, Serializable {
     @Column(name = "avatarUrl")
     private String avatarUrl;
 
+    @Column(name = "confirmKey")
+    String confirmKey;
+
     public Integer getId() {
         return id;
     }
@@ -118,6 +121,15 @@ public class User implements UserDetails, Serializable {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    public String getConfirmKey() {
+        return confirmKey;
+    }
+
+    public void setConfirmKey(String confirmKey) {
+        this.confirmKey = confirmKey;
+    }
+
     //
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

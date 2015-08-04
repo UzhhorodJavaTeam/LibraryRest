@@ -83,7 +83,7 @@
 </div>
 
 <div class="row" ng-hide="searchedData">
-    <div ng-repeat="book in books | orderBy:orderProp">
+    <div ng-repeat="book in books | orderBy:orderProp | filter: filterparan">
         <div class="col-md-3">
             <div class="thumbnail">
 

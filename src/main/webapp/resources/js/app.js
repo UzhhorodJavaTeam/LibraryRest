@@ -60,6 +60,21 @@
                 controller: 'UserController'
             })
 
+            .when('/confirm/:confirmKey', {
+                templateUrl: '/resources/pages/static pages/success_reg.html',
+                controller: 'ConfirmRegistration'
+            })
+
+            .when('/forgotPassword', {
+                templateUrl: '/resources/pages/static pages/forgot_password.html',
+                controller: 'UserController'
+            })
+
+            .when('/forgotPassword/:confirmKey', {
+                templateUrl: '/resources/pages/static pages/reset_password.html',
+                controller: 'ForgotPassword'
+            })
+
             .when('/login', {
                 templateUrl: '/resources/pages/static pages/login.html',
                 controller: 'UserController'
@@ -362,6 +377,48 @@
 
     });
 
+    
+    app.controller('ConfirmRegistration', function ($scope, $http,$routeParams) {
+        var confirmKey = $routeParams.confirmKey;
+
+        $http.get('/confirm/'+confirmKey)
+            .success(function (data) {
+            $scope.result = data;
+        })
+            .error(function (data) {
+
+            })
+    });
+
+
+    app.controller('ForgotPassword', function ($scope, $http, $routeParams, $location) {
+        var confirmKey = $routeParams.confirmKey;
+        $scope.spinner = false;
+
+        $http.get('/forgotPassword/'+confirmKey)
+            .success(function (data) {
+                $scope.userLoginForChangePassword = data;
+            })
+            .error(function (data) {
+
+            });
+
+        $scope.resetPassword = function (user) {
+            $scope.spinner = true;
+            user.login = $scope.userLoginForChangePassword;
+            $http.post('/resetPassword', user)
+                .success(function (data) {
+                    toastr.success(data);
+                    $location.url('/');
+                    $scope.spinner = false;
+                })
+                .error(function (data) {
+                    toastr.error(data);
+                })
+        };
+
+    });
+
     app.controller('bookDetailsController', ['$scope', '$routeParams', '$http', function ($scope, $routeParams, $http) {
         var categoryId = $routeParams.categoryId;
         $scope.bookId = $routeParams.bookId;
@@ -370,6 +427,7 @@
             $scope.book = data;
         });
     }]);
+
     app.factory('myService', function ($http, $q) {
         var deffered = $q.defer();
         var data = [];
@@ -405,24 +463,41 @@
     app.controller('UserController', ['$scope', '$http', '$location','myService', '$route', function ($scope, $http, $location, myService, $route) {
         $scope.userLogin = '';
         $scope.newuser = {};
+        $scope.userForForgotPassword = {};
         $scope.editUser = {};
         $scope.userAvatar = null;
         $scope.currentUserInfo = {};
         $scope.currentUserPassword = {};
+        $scope.spinner = false;
 
         $scope.resetUserAvatar = function () {
             $scope.userAvatar = null;
         };
 
         $scope.register = function (user) {
+            $scope.spinner = true;
             $http.post('/register', user)
-
                 .success(function () {
-                    toastr.success('Successfully registered');
+                    toastr.success('Successfully registered. Please check your email.');
                     $location.url('/');
+                    $scope.spinner = false;
                 })
                 .error(function () {
+
                     toastr.error("Register Failed");
+                })
+        };
+
+        $scope.forgotPassword = function (user) {
+            $scope.spinner = true;
+            $http.post('/forgotPassword', user)
+                .success(function (data) {
+                    toastr.success(data);
+                    $location.url('/');
+                    $scope.spinner = false;
+                })
+                .error(function () {
+                    toastr.error(data);
                 })
         };
 
@@ -451,7 +526,7 @@
                     toastr.success("Profile Updated")
                 })
                 .error(function (data) {
-                    toastr.error(data);
+                    toastr.error("Edit Failed");
                 })
         };
 
@@ -462,7 +537,7 @@
                     toastr.success("Profile Updated")
                 })
                 .error(function (data) {
-                    toastr.error(data);
+                    toastr.error("Edit Failed");
                 })
         };
 

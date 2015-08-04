@@ -13,6 +13,10 @@ public interface UserDao {
 
     public User findByName(String login);
 
+    public User findByConfirmKey(String confirmKey);
+
+    public User findByEmail(String email);
+
     public void save(User user);
 
     public void update(User user);
