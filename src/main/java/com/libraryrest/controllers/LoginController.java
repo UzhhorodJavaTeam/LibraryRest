@@ -5,7 +5,7 @@ import com.libraryrest.DAO.RoleDao;
 import com.libraryrest.DAO.UserDao;
 import com.libraryrest.enums.UserRole;
 import com.libraryrest.enums.UserStatus;
-import com.libraryrest.mail.MailMail;
+import com.libraryrest.mail.Mailer;
 import com.libraryrest.models.Role;
 import com.libraryrest.models.User;
 import org.apache.log4j.LogManager;
@@ -14,20 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @RestController
 public class LoginController {
 
     Logger logger = LogManager.getLogger(LoginController.class);
+
+    private static final Integer MILLISECONDS_IN_DAY = 86400000;
 
     @Autowired
     UserDao userDao;
@@ -45,9 +47,10 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String postRegisterPage(@RequestBody User user) throws Exception {
+    public User postRegisterPage(@RequestBody User user) throws Exception {
         logger.info("POST: /register");
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+        Properties prop = new Properties();
         User newUser = user;
         if (roleDao.findById(1L) == null){
             Role aRole = new Role(UserRole.ROLE_ADMIN);
@@ -60,28 +63,22 @@ public class LoginController {
         roles.add(userrole);
         newUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         String confirmKey = UUID.randomUUID().toString();
-        newUser.setConfirmKey(confirmKey);
+        newUser.setConfirmEmailToken(confirmKey);
         newUser.setStatus(UserStatus.INACTIVE);
         newUser.setRoles(roles);
         userDao.save(newUser);
 
-        ApplicationContext context =
-                new ClassPathXmlApplicationContext("Spring-Mail.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("spring-mail.xml");
+        prop.load(getClass().getClassLoader().getResourceAsStream("mail.properties"));
+        Mailer mailer = (Mailer) context.getBean("mailer");
+        mailer.sendMail(newUser, prop.getProperty("mail.username"), prop.getProperty("mail.confirmRegistrationSubject"), prop.getProperty("mail.confirmRegistrationTemplate"));
 
-        MailMail mm = (MailMail) context.getBean("mailMail");
-        mm.sendMail("saddsafsda@gmail.com",
-                newUser.getEmail(),
-                "Confirm Email",
-                "You are receiving this because you (or someone else) signed up for an npm user account with the username \"" + newUser.getFirstName() + "\".\n\n" +
-                        "To confirm that this is the email address associated with that account, click the following link or paste it into your browser:" +
-                        "\n\n http://localhost:8085/#/confirm/"+ confirmKey + "\n\n If you received this in error, you can safely ignore it.");
-
-        return "Register successfully";
+        return newUser;
     }
 
-    @RequestMapping(value = "/confirm/{confirmKey}", method = RequestMethod.GET)
-    public String confirmRegister(@PathVariable("confirmKey") String confirmKey){
-        User user = userDao.findByConfirmKey(confirmKey);
+    @RequestMapping(value = "/confirm/{confirmEmailToken}", method = RequestMethod.GET)
+    public String confirmRegister(@PathVariable("confirmEmailToken") String confirmEmailToken){
+        User user = userDao.findByConfirmEmailToken(confirmEmailToken);
         if (user.getStatus()==UserStatus.INACTIVE){
             user.setStatus(UserStatus.ACTIVE);
             userDao.update(user);
@@ -92,47 +89,46 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/forgotPassword", method = RequestMethod.POST)
-    public String sendMailToConfirmChangePassword(@RequestBody User userWithEmail){
-        User user = userDao.findByEmail(userWithEmail.getEmail());
-        if (user!=null){
-            ApplicationContext context =
-                    new ClassPathXmlApplicationContext("Spring-Mail.xml");
+    public ResponseEntity<String> sendMailToConfirmChangePassword(@RequestBody User userWithEmail) {
+        try {
+            Properties prop = new Properties();
+            Date currentDate = new Date();
+            User user = userDao.findByEmail(userWithEmail.getEmail());
+            user.setConfirmResetPasswordToken(UUID.randomUUID().toString());
+            user.setResetPasswordTokenCreationDate(currentDate);
+            userDao.update(user);
+            if (user != null) {
+                ApplicationContext context = new ClassPathXmlApplicationContext("spring-mail.xml");
+                prop.load(getClass().getClassLoader().getResourceAsStream("mail.properties"));
+                Mailer mailer = (Mailer) context.getBean("mailer");
+                mailer.sendMail(user, prop.getProperty("mail.username"), prop.getProperty("mail.confirmResetPasswordSubject"), prop.getProperty("mail.confirmResetPasswordTemplate"));
 
-            MailMail mm = (MailMail) context.getBean("mailMail");
-            mm.sendMail("saddsafsda@gmail.com",
-                    user.getEmail(),
-                    "Confirm Reset Password",
-                    "You are receiving this because you (or someone else) requested the reset password of the \"" + user.getFirstName() + "\" user account.\n\n" +
-                            "Please click on the following link, or paste this into your browser to complete the process:" +
-                            "\n\n http://localhost:8085/#/forgotPassword/"+ user.getConfirmKey() + "\n\n If you received this in error, you can safely ignore it.");
-
-            return "Please check your email!";
-        }else{
-            return "The user with the email does not exist!";
+                return new ResponseEntity<String>("Please check your email!", null, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<String>("The user with the email does not exist!", null, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<String>(e.getStackTrace().toString(), null, HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/forgotPassword/{confirmKey}", method = RequestMethod.GET)
-    public String confirmChangePassword(@PathVariable("confirmKey") String confirmKey){
-        User user = userDao.findByConfirmKey(confirmKey);
+    @RequestMapping(value = "/resetPassword/{confirmResetPasswordToken}", method = RequestMethod.POST)
+    public ResponseEntity<String> resetPassword(@PathVariable("confirmResetPasswordToken") String confirmResetPasswordToken, @RequestBody User userWithNewPassword){
+            User user = userDao.findByConfirmResetPasswordToken(confirmResetPasswordToken);
+            Date dateCreationToken = user.getResetPasswordTokenCreationDate();
+            Date currentDate = new Date();
+            Integer dayAgoOrNo = (int) (currentDate.getTime()-dateCreationToken.getTime())/MILLISECONDS_IN_DAY;
 
-        return user.getLogin();
-    }
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 
-    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-    public String resetPassword(@RequestBody User userForChangePassword){
-        User user = userDao.findByName(userForChangePassword.getLogin());
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
+            if (dayAgoOrNo<1) {
+                user.setPassword(bCryptPasswordEncoder.encode(userWithNewPassword.getPassword()));
 
-        user.setPassword(bCryptPasswordEncoder.encode(userForChangePassword.getPassword()));
-        user.setConfirmKey(UUID.randomUUID().toString());
+                userDao.update(user);
 
-        userDao.update(user);
-
-        return "Password successfully changed";
+                return new ResponseEntity<String>("Password successfully changed", null, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<String>("Token is no longer valid, please try again from the beginning.", null, HttpStatus.BAD_REQUEST);
+            }
     }
 }
-
-
-// hsadhdsajdsa@mail.com - qwertyuu11
-// saddsafsda@gmail.com - qwertyuu

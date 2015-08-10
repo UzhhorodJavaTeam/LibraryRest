@@ -1,7 +1,7 @@
 package com.libraryrest.DAO;
 
-import org.springframework.security.access.annotation.Secured;
 import com.libraryrest.models.User;
+import org.springframework.security.access.annotation.Secured;
 
 import java.util.List;
 
@@ -13,7 +13,9 @@ public interface UserDao {
 
     public User findByName(String login);
 
-    public User findByConfirmKey(String confirmKey);
+    public User findByConfirmEmailToken(String confirmEmailToken);
+
+    public User findByConfirmResetPasswordToken(String confirmResetPasswordToken);
 
     public User findByEmail(String email);
 

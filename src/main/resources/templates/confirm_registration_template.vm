@@ -1,0 +1,7 @@
+You are receiving this because you (or someone else) signed up for user account with the username "${user.userName}".
+
+To confirm that this is the email address associated with that account, click the following link or paste it into your browser:
+
+http://localhost:8085/#/confirm/${user.getConfirmEmailToken()}
+
+If you received this in error, you can safely ignore it.

@@ -50,15 +50,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     @Transactional
-    public User findByConfirmKey(String confirmKey) {
-        String hql = "from User u where u.confirmKey = :confirmKey";
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
-        query.setParameter("confirmKey", confirmKey);
+    public User findByConfirmEmailToken(String confirmEmailToken) {
+        return (User) sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("confirmEmailToken", confirmEmailToken)).uniqueResult();
+    }
 
-        @SuppressWarnings("unchecked")
-        List<User> userList = (List<User>) query.list();
-
-        return userList.get(0);
+    @Override
+    @Transactional
+    public User findByConfirmResetPasswordToken(String confirmResetPasswordToken) {
+        return (User) sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("confirmResetPasswordToken", confirmResetPasswordToken)).uniqueResult();
     }
 
     @Override

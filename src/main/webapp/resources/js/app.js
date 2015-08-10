@@ -70,7 +70,7 @@
                 controller: 'UserController'
             })
 
-            .when('/forgotPassword/:confirmKey', {
+            .when('/forgotPassword/:confirmResetPasswordToken', {
                 templateUrl: '/resources/pages/static pages/reset_password.html',
                 controller: 'ForgotPassword'
             })
@@ -392,27 +392,20 @@
 
 
     app.controller('ForgotPassword', function ($scope, $http, $routeParams, $location) {
-        var confirmKey = $routeParams.confirmKey;
+        var confirmResetPasswordToken = $routeParams.confirmResetPasswordToken;
         $scope.spinner = false;
-
-        $http.get('/forgotPassword/'+confirmKey)
-            .success(function (data) {
-                $scope.userLoginForChangePassword = data;
-            })
-            .error(function (data) {
-
-            });
 
         $scope.resetPassword = function (user) {
             $scope.spinner = true;
-            user.login = $scope.userLoginForChangePassword;
-            $http.post('/resetPassword', user)
+            $http.post('/resetPassword/'+confirmResetPasswordToken, user)
                 .success(function (data) {
                     toastr.success(data);
                     $location.url('/');
                     $scope.spinner = false;
                 })
                 .error(function (data) {
+                    $scope.spinner = false;
+                    $location.url('/forgotPassword');
                     toastr.error(data);
                 })
         };
@@ -483,7 +476,7 @@
                     $scope.spinner = false;
                 })
                 .error(function () {
-
+                    $scope.spinner = false;
                     toastr.error("Register Failed");
                 })
         };
@@ -497,6 +490,7 @@
                     $scope.spinner = false;
                 })
                 .error(function () {
+                    $scope.spinner = false;
                     toastr.error(data);
                 })
         };

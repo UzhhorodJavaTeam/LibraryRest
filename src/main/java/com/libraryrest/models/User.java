@@ -59,8 +59,15 @@ public class User implements UserDetails, Serializable {
     @Column(name = "avatarUrl")
     private String avatarUrl;
 
-    @Column(name = "confirmKey")
-    String confirmKey;
+    @Column(name = "confirm_email_token")
+    String confirmEmailToken;
+
+    @Column(name = "reset_password_token_creation_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date resetPasswordTokenCreationDate;
+
+    @Column(name = "confirm_reset_password_token")
+    private String confirmResetPasswordToken;
 
     public Integer getId() {
         return id;
@@ -122,12 +129,28 @@ public class User implements UserDetails, Serializable {
         this.roles = roles;
     }
 
-    public String getConfirmKey() {
-        return confirmKey;
+    public String getConfirmEmailToken() {
+        return confirmEmailToken;
     }
 
-    public void setConfirmKey(String confirmKey) {
-        this.confirmKey = confirmKey;
+    public void setConfirmEmailToken(String confirmEmailToken) {
+        this.confirmEmailToken = confirmEmailToken;
+    }
+
+    public Date getResetPasswordTokenCreationDate() {
+        return resetPasswordTokenCreationDate;
+    }
+
+    public void setResetPasswordTokenCreationDate(Date resetPasswordTokenCreationDate) {
+        this.resetPasswordTokenCreationDate = resetPasswordTokenCreationDate;
+    }
+
+    public String getConfirmResetPasswordToken() {
+        return confirmResetPasswordToken;
+    }
+
+    public void setConfirmResetPasswordToken(String confirmResetPasswordToken) {
+        this.confirmResetPasswordToken = confirmResetPasswordToken;
     }
 
     //
